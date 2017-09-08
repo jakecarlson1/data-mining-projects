@@ -1,0 +1,6 @@
+# data folder
+data/
+
+# R history and data
+*/.Rdata
+*/.Rhistory
