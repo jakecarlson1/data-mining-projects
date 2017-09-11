@@ -2,13 +2,7 @@ data_file <- "../data/Status_Non_Dod_2009_03.txt"
 header_file <- "../data/headers.csv"
 agency_file <- "../data/SCTFILE.TXT"
 
-dat_header <- read.csv(header_file, header = TRUE)
-
-agency_trans <- readLines(agency_file)
-agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
-agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
-agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
-
+# clean a data file and return a data frame
 clean_file <- function(data_file_name) {
     dat_raw <- readLines(data_file_name)
 
@@ -18,6 +12,7 @@ clean_file <- function(data_file_name) {
     df <- as.data.frame(df)
     colnames(df) <- dat_header[,1]
 
+    # save original length of df
     original_len <- length(df$PseudoID)
 
     # make numeric fields numeric
@@ -60,31 +55,75 @@ clean_file <- function(data_file_name) {
     # 5. reselect from df where rows are not in to_remove
     df <- df[!(as.numeric(rownames(df)) %in% to_remove),]
 
-    # create a quarterly pay column
-    # for employees with one entry, QPay <- Pay * (3/12)
-    # for employees with multiple entries (n), QPay <- Pay * ((3/n)/12)
-    # assumes an employees time was equally split between all agencies they worked at in a quarter
-    # n = 1: 3/12
-    # n = 2: 1.5/12
-    # n = 3: 1/12
-    # n = 4: 0.75/12
-
     # add agency name
     m <- match(df$Agency, agency_trans_table$agency_ID)
     df$AgencyName <-  agency_trans_table$agency_name[m]
 
+    # calculate percent of data saved
     final_len <- length(df$PseudoID)
-    print(paste("[", data_file_name, "]", final_len, "of", original_len, "records maintained:", final_len/original_len*100, "%"))
+    print(paste("[", data_file_name, "]", final_len, "of", original_len,"records maintained:",
+                format(round(final_len/original_len*100, 2)), "%"))
 
-    # cleaning
-    # - subset to agencies I want to examine
-    # - write to csv
-    # ..- repeat for all data files
     return(df)
 }
 
 df <- clean_file(data_file)
 
+# find and clean all data files
+# save cleaned data frames to csvs by year and presidency
+wash_and_dry <- function(data_d, bush_y, obama_y, bush_f, obama_f) {
+    data_files <- list.files(path = data_d)
+    non_dod_files <- paste(data_d, grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt", data_files, perl = TRUE, value = TRUE), sep = "")
+
+    # generate list of files using paste, group by bush and obama
+
+    header_file <- "headers.csv"
+    agency_file <- "SCTFILE.TXT"
+    dat_header <- read.csv(header_file, header = TRUE)
+    agency_trans <- readLines(agency_file)
+    agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
+    agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
+    agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
+
+    dfs <- t(sapply(data_files, FUN = clean_file))
+
+
+}
+
+path_to_data <- "../data/"
+
+data_files <- list.files(path = path_to_data)
+grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt", data_files, perl = TRUE, value = TRUE)
+
+
+bush_years <- c(2001:2008)
+obama_years <- c(2009:2014)
+
+bush_csv <- "bush-years.csv"
+obama_csv <- "obama-years.csv"
+
+# clean all data and save to csv
+# will save all data for bush years to bush_csv
+wash_and_dry(path_to_data, bush_years, obama_years, bush_csv, obama_csv)
+
+# create a quarterly pay column
+# for employees with one entry, QPay <- Pay * (3/12)
+# for employees with multiple entries (n), QPay <- Pay * ((3/n)/12)
+# assumes an employees time was equally split between all agencies they worked at in a quarter
+# n = 1: 3/12
+# n = 2: 1.5/12
+# n = 3: 1/12
+# n = 4: 0.75/12
+add_q_pay <- function(data_frame) {
+    ids <- as.data.fram(table(data_file$PseudoID))
+}
+
+
+# subset to agencies I want to examine
+# agencies EPA, NHS, TSA,
+
+
+# returns class of each column
 sapply(df, class)
 
 head(df)
