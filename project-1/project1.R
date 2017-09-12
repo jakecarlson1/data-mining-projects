@@ -2,6 +2,12 @@ data_file <- "../data/Status_Non_Dod_2009_03.txt"
 header_file <- "../data/headers.csv"
 agency_file <- "../data/SCTFILE.TXT"
 
+dat_header <- read.csv(header_file, header = TRUE)
+agency_trans <- readLines(agency_file)
+agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
+agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
+agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
+
 # clean a data file and return a data frame
 clean_file <- function(data_file_name) {
     dat_raw <- readLines(data_file_name)
