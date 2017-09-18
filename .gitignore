@@ -1,6 +1,16 @@
-# data folder
+# data folders
 data/
+new-data/
+clean-data/
 
 # R history and data
 */.Rdata
 */.Rhistory
+
+# Latex build files
+*/report/*.aux
+*/report/*.fdb_latexmk
+*/report/*.fls
+*/report/*.log
+*/report/*.synctex.gz
+*/report/*.toc

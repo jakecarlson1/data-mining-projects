@@ -1,15 +1,5 @@
-data_file <- "../data/Status_Non_Dod_2009_03.txt"
-header_file <- "../data/headers.csv"
-agency_file <- "../data/SCTFILE.TXT"
-
-dat_header <- read.csv(header_file, header = TRUE)
-agency_trans <- readLines(agency_file)
-agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
-agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
-agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
-
 # clean a data file and return a data frame
-clean_file <- function(data_file_name) {
+clean_file <- function(data_file_name, agency_subset = c(), dat_header, agency_trans_table) {
     dat_raw <- readLines(data_file_name)
 
     # apply headers
@@ -21,17 +11,22 @@ clean_file <- function(data_file_name) {
     # save original length of df
     original_len <- length(df$PseudoID)
 
+    # subset to employees who worked in agency_subset
+    if (length(agency_subset) > 0) {
+        df <- df[grep(paste(agency_subset, collapse = '|'), df$Agency),]
+    }
+
     # make numeric fields numeric
     df$Pay <- as.numeric(as.character(df$Pay))
 
     # replace unknowns with NA
     df$Station <- replace(df$Station, df$Station == "#########", NA)
     df$Age <- replace(df$Age, df$Age == "UNSP", NA)
-    df$Education <- replace(df$Education, df$Education == "" | df$Education == "*", NA)
-    df$PayPlan <- replace(df$PayPlan, df$PayPlan == "" | df$PayPlan == "*", NA)
-    df$Category <- replace(df$Category, df$Category == "" | df$Category == "*", NA)
-    df$SupervisoryStatus <- replace(df$SupervisoryStatus, df$SupervisoryStatus == "" | df$SupervisoryStatus == "*", NA)
-    df$Schedule <- replace(df$Schedule, df$Schedule == "" | df$Schedule == "*", NA)
+    df$Education <- replace(df$Education, df$Education == "" | df$Education == "*" | df$Education == "**", NA)
+    df$PayPlan <- replace(df$PayPlan, df$PayPlan == "" | df$PayPlan == "*" | df$PayPlan == "**", NA)
+    df$Category <- replace(df$Category, df$Category == "" | df$Category == "*" | df$Category == "**", NA)
+    df$SupervisoryStatus <- replace(df$SupervisoryStatus, df$SupervisoryStatus == "" | df$SupervisoryStatus == "*" | df$SupervisoryStatus == "**", NA)
+    df$Schedule <- replace(df$Schedule, df$Schedule == "" | df$Schedule == "*" | df$Schedule == "**", NA)
 
     # make ordinal fields ordered factors
     df$Age <- factor(df$Age, ordered = TRUE, levels = levels(df$Age))
@@ -73,60 +68,73 @@ clean_file <- function(data_file_name) {
     return(df)
 }
 
-df <- clean_file(data_file)
-
 # find and clean all data files
-# save cleaned data frames to csvs by year and presidency
-wash_and_dry <- function(data_d, bush_y, obama_y, bush_f, obama_f) {
+# save cleaned data frames to csvs by year
+wash_and_dry <- function(data_d, out_data_d, years, agency_subset = c()) {
     data_files <- list.files(path = data_d)
     non_dod_files <- paste(data_d, grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt", data_files, perl = TRUE, value = TRUE), sep = "")
 
-    # generate list of files using paste, group by bush and obama
-
-    header_file <- "headers.csv"
-    agency_file <- "SCTFILE.TXT"
+    header_file <- paste(data_d, "headers.csv", sep = "")
+    agency_file <- paste(data_d, "SCTFILE.TXT", sep = "")
     dat_header <- read.csv(header_file, header = TRUE)
     agency_trans <- readLines(agency_file)
     agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
     agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
     agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
 
-    dfs <- t(sapply(data_files, FUN = clean_file))
-
-
+    for(y in years) {
+        year_files <- grep(paste("Status_Non_DoD_", toString(y), "_[01][3692].txt", sep = ""), non_dod_files, perl = TRUE, value = TRUE)
+        df <- do.call(rbind, lapply(year_files, agency_subset, dat_header, agency_trans_table, FUN = clean_file))
+        write.csv(df, file = paste(out_data_d, toString(y), "-clean.csv", sep = ""))
+    }
 }
 
 path_to_data <- "../data/"
+output_data_path <- "../clean-data/"
 
-data_files <- list.files(path = path_to_data)
-grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt", data_files, perl = TRUE, value = TRUE)
-
-
-bush_years <- c(2001:2008)
-obama_years <- c(2009:2014)
-
-bush_csv <- "bush-years.csv"
-obama_csv <- "obama-years.csv"
-
-# clean all data and save to csv
-# will save all data for bush years to bush_csv
-wash_and_dry(path_to_data, bush_years, obama_years, bush_csv, obama_csv)
-
-# create a quarterly pay column
-# for employees with one entry, QPay <- Pay * (3/12)
-# for employees with multiple entries (n), QPay <- Pay * ((3/n)/12)
-# assumes an employees time was equally split between all agencies they worked at in a quarter
-# n = 1: 3/12
-# n = 2: 1.5/12
-# n = 3: 1/12
-# n = 4: 0.75/12
-add_q_pay <- function(data_frame) {
-    ids <- as.data.fram(table(data_file$PseudoID))
-}
-
+data_years <- c(2001:2014)
 
 # subset to agencies I want to examine
-# agencies EPA, NHS, TSA,
+# agencies EPA, NIH, NIE, TSA, customs, substance abuse, DOE, DOJ, NASA, DOT, Homeland security, NSA, IRS, NIH, VA
+# agency | code
+# EPA | AGEP, AHEP
+# DO Health and Human Services | AGHE, AHHE
+# DO Homeland Security | AGHS, AHHS
+# DO Housing and Urban Development | AGHU, AHHU
+# DO Energy | AGDN, AHDN
+# DO Education | AGED, AHED
+# DOJ | AGDJ, AHDJ
+# DOD | AGDD, AHDD
+# FEMA | AGEM, AHEM
+# Gen Services | AGGS, AHGS
+# DO Interior | AGIN, AHIN
+# DO Transportation | AGTD, AHTD
+# NASA | AGNN, AHNN
+# Director of National Inteligence | AGOI, AHOI
+# NSA | AGSP, AHSP
+# IRS | AGTR07, AGTR93
+# VA | AGVA, AHVA
+agencies_to_save <- c("AGEP", "AHEP",
+                      "AGHE", "AHHE",
+                      "AGHS", "AHHS",
+                      "AGHU", "AHHU",
+                      "AGDN", "AHDN",
+                      "AGED", "AHED",
+                      "AGDJ", "AHDJ",
+                      "AGDD", "AHDD",
+                      "AGEM", "AHEM",
+                      "AGGS", "AHGS",
+                      "AGIN", "AHIN",
+                      "AGTD", "AHTD",
+                      "AGNN", "AHNN",
+                      "AGOI", "AHOI",
+                      "AGSP", "AHSP",
+                      "AGTR07", "AGTR93",
+                      "AGVA", "AHVA")
+agencies_to_save <- sapply(agencies_to_save, FUN = function(x) substring(x, 3,6))
+
+# clean all data and save to csv
+wash_and_dry(path_to_data, output_data_path, data_years, agencies_to_save)
 
 
 # returns class of each column
