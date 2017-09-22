@@ -14,18 +14,27 @@ clean_file <- function(data_file_name, agency_subset = c(), dat_header, agency_t
     # subset to employees who worked in agency_subset
     if (length(agency_subset) > 0) {
         df <- df[grep(paste(agency_subset, collapse = '|'), df$Agency),]
+        # drop sheep industry
+        df <- df[!(df$Agency == "AGSC"),]
     }
+
+    # drop Name column
+    df <- df[, !(colnames(df) %in% c("Name"))]
 
     # make numeric fields numeric
     df$Pay <- as.numeric(as.character(df$Pay))
 
     # replace unknowns with NA
-    df$Station <- replace(df$Station, df$Station == "#########", NA)
+    df$Station <- replace(df$Station, df$Station == "#########" | df$Station == "*********", NA)
     df$Age <- replace(df$Age, df$Age == "UNSP", NA)
     df$Education <- replace(df$Education, df$Education == "" | df$Education == "*" | df$Education == "**", NA)
     df$PayPlan <- replace(df$PayPlan, df$PayPlan == "" | df$PayPlan == "*" | df$PayPlan == "**", NA)
+    df$Grade <- replace(df$Grade, df$Grade == "" | df$Grade == "**", NA )
+    df$LOS <- replace(df$LOS, df$LOS == "UNSP", NA)
+    df$Occupation <- replace(df$Occupation, df$Occupation == "" | df$Occupation == "****", NA)
     df$Category <- replace(df$Category, df$Category == "" | df$Category == "*" | df$Category == "**", NA)
     df$SupervisoryStatus <- replace(df$SupervisoryStatus, df$SupervisoryStatus == "" | df$SupervisoryStatus == "*" | df$SupervisoryStatus == "**", NA)
+    df$Appointment <- replace(df$Appointment, df$Appointment == "" | df$Appointment == "**", NA)
     df$Schedule <- replace(df$Schedule, df$Schedule == "" | df$Schedule == "*" | df$Schedule == "**", NA)
 
     # make ordinal fields ordered factors
@@ -34,6 +43,9 @@ clean_file <- function(data_file_name, agency_subset = c(), dat_header, agency_t
 
     # if Age is unspecified, use median age for agency
     df$Age <- with(df, ave(df$Age, df$Agency, FUN = function(x) replace(x, is.na(x), levels(df$Age)[median(as.integer(x), na.rm = TRUE)])))
+
+    # fill NA Education with median Education for employees of the same Age at the Agency
+    df$Education <- with(df, ave(df$Education, df$Age, df$Agency, FUN = function(x) replace(x, is.na(x), levels(df$Education)[median(as.integer(x), na.rm = TRUE)])))
 
     # fill NA pays with median pay for the Age of the employee at that agency
     df$Pay <- with(df, ave(df$Pay, df$Age, df$Agency, FUN = function(x) replace(x, is.na(x), median(x, na.rm = TRUE))))
@@ -95,7 +107,6 @@ output_data_path <- "../clean-data/"
 data_years <- c(2001:2014)
 
 # subset to agencies I want to examine
-# agencies EPA, NIH, NIE, TSA, customs, substance abuse, DOE, DOJ, NASA, DOT, Homeland security, NSA, IRS, NIH, VA
 # agency | code
 # EPA | AGEP, AHEP
 # DO Health and Human Services | AGHE, AHHE
@@ -110,7 +121,6 @@ data_years <- c(2001:2014)
 # DO Interior | AGIN, AHIN
 # DO Transportation | AGTD, AHTD
 # NASA | AGNN, AHNN
-# Director of National Inteligence | AGOI, AHOI
 # NSA | AGSP, AHSP
 # IRS | AGTR07, AGTR93
 # VA | AGVA, AHVA
@@ -127,7 +137,6 @@ agencies_to_save <- c("AGEP", "AHEP",
                       "AGIN", "AHIN",
                       "AGTD", "AHTD",
                       "AGNN", "AHNN",
-                      "AGOI", "AHOI",
                       "AGSP", "AHSP",
                       "AGTR07", "AGTR93",
                       "AGVA", "AHVA")
@@ -135,6 +144,13 @@ agencies_to_save <- sapply(agencies_to_save, FUN = function(x) substring(x, 3,6)
 
 # clean all data and save to csv
 wash_and_dry(path_to_data, output_data_path, data_years, agencies_to_save)
+
+
+# data visualization
+setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-1")
+library('ggplot2')
+data_dir <- "../clean-data/"
+df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",")
 
 
 # returns class of each column
