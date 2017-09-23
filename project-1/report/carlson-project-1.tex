@@ -119,7 +119,9 @@ Since Bush is a Republican, and Obama a Democrat, we would expect a dichotomy in
     Based on the majority party in each chamber of Congress, Bush should have faced minimal opposition for his first term and the first half of his second term. Obama entered office with a Democratic House and Senate. He should have been able to move policy most effectively during the first half of his first term. It will be interesting to see how his policy was effected by Republicans gaining back the House during his first term.
 
 \section{Data Understanding}
-The federal payroll data was obtained through the Freedom of Information Act by BuzzFeed News. The tables are organized by quarter. The data set contains relevant attributes needed for a payroll system such as employee name, the agency they work, their age, education level, length of service, and pay. Each entry also contains a PseudoID which can be used to identify an individual employee. I will further describe each attribute below. These definitions were created using the FedScope Data Definitions document and translation files included with the data set.\cite{datadefs}
+The federal payroll data was obtained through the Freedom of Information Act by BuzzFeed News. For this report I will be examining the status files, which contain payroll information for each agency organized by quarter. I will not be examining accessions or separations in this report.
+\par
+The status files contain relevant attributes needed for a payroll system such as employee name, the agency they work, their age, education level, length of service, and pay. Each entry also contains a PseudoID which can be used to identify an individual employee. I will further describe each attribute below. These definitions were created using the FedScope Data Definitions document and translation files included with the data set.\cite{datadefs}
 
     \subsection{PseudoID}
     A unique identifier for an employee. This value is sufficient for identifying an employee in a table. If a table contains duplicate PseudoIDs, an employee must of either been transfered to another organization, or had their pay change.
@@ -218,6 +220,52 @@ The federal payroll data was obtained through the Freedom of Information Act by 
         \end{center}
 
 \section{Data Preparation}
+The data comes in text files with fixed width columns. Dr. Hahsler provided us with some initial code to read in one of the text files, break up the attributes into columns, apply a header to the columns, remove common characters from the Agency column, and create a new column called AgencyName with the translation from the four character Agency identifier to the full agency name. This is was a good starting point, however, there is more to be done before the data is clean enough to begin analysis. After my cleaning pipeline was functional, I wrote R code to apply the pipeline to every status file in the data set. I grouped cleaned data frames by year and saved each year to its own CSV file for quick reloading as I moved into data modeling.
+
+    \subsection{Agency Subsetting}
+    The first thing I do is throw out agencies that I don't want to examine. Based on my business understanding, I selected agencies that were specifically mentioned as receiving attention by each president at some point in their two terms. I also selected agencies that I thought would show differences in the political affiliations and leadership policies of the two presidents. I perform this subsetting as the first stage in my pipeline to reduce the amount of data that has to flow through the rest of the pipeline. Here are the agencies I chose.
+
+        \begin{center}
+            \begin{tabular}{ |c|c| }
+                \hline
+                Agency & Agency Code \\
+                \hline
+                Department of Health and Human Sevices & AGHE, AHHE \\
+                Department of Homeland Security & AGHS, AHHS \\
+                Department of Housing and Urban Development & AGHU, AHHU \\
+                Department of Energy & AGDN, AHDN \\
+                Department of Education & AGED, AHED \\
+                Department of Justice & AGDJ, AHDJ \\
+                Department of Defense & AGDD, AHDD \\
+                Department of the Interior & AGIN, AHIN \\
+                Department of Transportation & AGTD, AHTD \\
+                Environmental Protection Agency & AGEP, AHEP \\
+                Federal Emergency Management Agency & AGEM, AHEM \\
+                General Services & AGGS, AHGS \\
+                NASA & AGNN, AHNN \\
+                National Security Agency & AGSP, AHSP \\
+                Internal Revenue Service & AGTR07, AGTR93 \\
+                Veterans Affairs & AGVA, AHVA \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+    \subsection{Unknown Values}
+    Many of the entries have values encoding for unknown or missing information in at least one of the attributes. For example, the Age column uses "UNSP" to show that the age of the employee is unspecified. Other values that indicate missing data are a string of asterisks or an empty field. It is necessary to convert these values to NA, which R uses to encode that an attribute is missing for an entity.
+    \par
+    When R reads in a data file, it assumes all attributes are 'factors', or categorical variables. Many of the attributes are categorical variables, but fields like Age and Education are ordinals. I need to convert these to ordered factors, R's representation for an ordinal, before moving forward. Also, Pay needs to be converted from a factor to a numeric value.
+
+    \subsection{Imputation}
+    After converting these field to more accurate data classes, I work to impute some unknown values. Starting with Age, I replace an unknown employee Age with the median Age for employees at the same Agency. I thought this was a good method for imputing Age because if some agencies have outliers in Age, either very young or very old, the median will not be dramatically affected by these values like the mean would.
+    \par
+    I then impute Education by taking the median Education level achieved by employees of the same Age at that Agency. The majority of employees in the federal government achieved a Bachelor's degree, so this was a common value that was used to fill in unknown Education.
+    \par
+    Finally, I impute Pay using the median Pay for employees of the same Age at the Agency. This is a good method because the annual pay for an employee at any organization is closely related to their work experience, which can be loosely approximated based on their age. This will also separate based on Agency, so that if some Agencies recieve higher Pay on average, the imputed value more closely represent the separation.
+    \par
+    After imputation, I throw out any entries where Pay could not be imputed. If the Agency an employee worked at was not known, the above imputation method would not return a value. Without knowing the Pay or the Agency an employee worked at severely reduces the amount of useful information we can gather from their entry, so they are removed.
+
+    \subsection{Duplicates}
+    Next, I handle duplicate PseudoIDs. As stated earlier, a PseudoID will occur multiple times if an employee changed agencies during the quarter or if their pay changed. If an employee changed organization, I will want to include their salary when determining the total value of the payroll for each of those organizations, so these entries will be left as is. However, if an employee simply recieved a raise while working at the same organization, I want to remove the lower of the salaries. This makes the assumption that the employee earned that same ammont during the whole quarter, but since we are looking at payroll data with the level of granularity of the quarter year, this is acceptable.
 
 \section{Modeling}
 
