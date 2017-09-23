@@ -8,7 +8,7 @@
 \maketitle
 
 \abstract
-In this report, I will be examining how the United States federal government changed under President George W. Bush and President Barack Obama. I will look into the campaign platforms for each president, determine expectations for how the federal government would resize to meet each president's campaign promisses, and then look at actual policy decisions made by each president and how they changed the federal payroll. I will also examine natural disasters and geopolitical events that occured during each presidency and how the federal government reacted.
+In this report, I will be examining how the United States federal government changed under President George W. Bush and President Barack Obama. I will look into the campaign platforms for each president, determine expectations for how the federal government would resize to meet each president's campaign promisses, and then look at actual policy decisions made by each president and how they changed the federal payroll. I will also examine natural disasters and geopolitical events that occured during each presidency and how the federal government reacted. (* results *)
 \newpage
 
 \tableofcontents
@@ -94,8 +94,128 @@ Since Bush is a Republican, and Obama a Democrat, we would expect a dichotomy in
         \par
         As Obama entered his second term, he put immigration reform and climate change in the spotlight. He outlined a plan for comprehensive immigration reform just after his first week of being reelected. He followed a few months later with the Climate Action Plan, which was meant to lower carbon polution and prepare the country for the pending effects of climate change. He made it clear that reversing climate change is a task for the whole planet.\cite{obamaevents} As Obama steps up his fight against cliamte change, we would expect the EPA to receive additional funding for cliamte science. It will also be interesint to see how Customs and Border Protection responed to his immigration reform.
 
+    \subsection{Congress}
+    Just because a president allocates money for a program, doesn't mean the payroll for the agency responsible will be affected. Congress is ultimately responsible for managing the bidget of the U.S. government. This means that the party in control of the House of Representatives and the Senate has more control over the budget than the president. If the president leads the party that controls either the House or the Senate, they will likely be able to implement more of their policies. However, if the president's party is the minority party in either of the chambers, they will meet more opposition as they try to push policy.
+
+        \begin{center}
+            \begin{tabular}{ |c|c|c|c| }
+                \hline
+                \multicolumn{4}{|c|}{Majority Party} \\
+                \hline
+                Year & President & Senate & House \\
+                \hline
+                2001 & Bush & Republican & Republican \\
+                2003 & Bush & Republican & Republican \\
+                2005 & Bush & Republican & Republican \\
+                2007 & Bush & Democratic & Democratic \\
+                2009 & Obama & Democratic & Democratic \\
+                2011 & Obama & Democratic & Republican \\
+                2013 & Obama & Democratic & Republican \\
+                2015 & Obama & Republican & Republican \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+    Based on the majority party in each chamber of Congress, Bush should have faced minimal opposition for his first term and the first half of his second term. Obama entered office with a Democratic House and Senate. He should have been able to move policy most effectively during the first half of his first term. It will be interesting to see how his policy was effected by Republicans gaining back the House during his first term.
+
 \section{Data Understanding}
-Just because a president allocates money for a program, doesn't mean the payroll for the agency responsible will be affected.
+The federal payroll data was obtained through the Freedom of Information Act by BuzzFeed News. The tables are organized by quarter. The data set contains relevant attributes needed for a payroll system such as employee name, the agency they work, their age, education level, length of service, and pay. Each entry also contains a PseudoID which can be used to identify an individual employee. I will further describe each attribute below. These definitions were created using the FedScope Data Definitions document and translation files included with the data set.\cite{datadefs}
+
+    \subsection{PseudoID}
+    A unique identifier for an employee. This value is sufficient for identifying an employee in a table. If a table contains duplicate PseudoIDs, an employee must of either been transfered to another organization, or had their pay change.
+
+    \subsection{Name}
+    The name of the employee if it is provided by the agency. Some employee names have been withheld by the agency they work for. These entries have "Name Withheld by Agency" in place of the name. The name of an employee is not useful for understanding how the federal government changes under a president, so this attribute will not be used.
+
+    \subsection{Date}
+    The date the pay report is generated up to. Because the tables are quarterly, the date for each quarter will be the same for all entries. This is the last day in March, June, September, and December.
+
+    \subsection{Agency}
+    This is a categorical variable representing the department the employee worked at. The departments are encoded as six characters. The first four characters represent the top level organization the department belongs to. The last two characters are unique to the department for identification. The provided file "SCTFILE.txt" can be sued to translate between the agency encoding and the actual name of the agency.
+    \par
+    For example, the Food and Drug Administration is encoded as 'AGHE36'. Here, AGHE refers to the Department of Health and Human Services. The value '36' is then used to identify the FDA specifically. All agency entries begin with 'AG' or 'AH', so these characters can be discarded.
+
+    \subsection{Station}
+    Station is a categorical variable that refers to the actual location the employee worked at. This is encoded in a 9 character string. The first two characters represent the state the employee worked, characters 3-6 map to a city, and characters 7-9 encode a county.
+
+    \subsection{Age}
+    This is an ordinal attribute that holds the age of the employee. Ages are broken down into the age ranges of five years starting with 15-19, 20-24, and going up to 70-74 and then 75+.
+
+    \subsection{Education}
+    Education is another ordinal attribute that encodes the level of education the employee achieved. This is represented as a two digit number that maps to a description of the education level. Examples are 04 for High School Graduate, 13 for a Bachelor's Degree, 17 for a Master's Degree, and 21 for a Doctorate Degree.
+
+    \subsection{PayPlan}
+    Pay plan is a two character categorical variable loosely representing the type of work the employee does. This is used by the governemnt to determine the rate of pay increases. Some examples are 'EE' for expert, 'EG' for consultant, and 'EX' for executive.
+
+    \subsection{Grade}
+    Grade is a categorical vaiable used in conjunction with PayPlan to determine an employees basic pay rate.
+
+    \subsection{LOS}
+    LOS is an ordinal variable representing the length of service in years of the employee. Length of service is grouped by the following time spans: < 1, 1-2, 3-4, 5-9, 10-19, 20-24, 25-29, 30-34, and 35+.
+
+    \subsection{Occupation}
+    Occupation is a categorical variable classifying workers as blue or white collar. The value can be more desciptive by looking into occupation families, but the data attribute category also encodes this information so I will not be using this field.
+
+    \subsection{Category}
+    Category is a categorical variable representing the type of work the employee does. It is a single character in the PATCO acronym which translates as follows.
+
+        \begin{center}
+            \begin{tabular}{ |c|c| }
+                \hline
+                Letter & Translation \\
+                \hline
+                P & Professional \\
+                A & Administrative \\
+                T & Technical \\
+                C & Clerical \\
+                O & Other White Collar \\
+                B & Blue Collar \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+    \subsection{Pay}
+    Pay is a ratio representing the annual pay of the employee in U.S. dollars.
+
+    \subsection{SupervisoryStatus}
+    A categorical variable representing what level of leadership the employee is at. This follows the following translation.
+
+        \begin{center}
+            \begin{tabular}{ |c|c| }
+                \hline
+                Status Code & Translation \\
+                \hline
+                2 & Supervisor or Manager \\
+                4 & Supervisor (CSRA) \\
+                5 & Management Official (CSRA) \\
+                6 & Leader \\
+                7 & Team Leader \\
+                8 & All Other Positions \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+    Here, CSRA refers to a private organization that provides IT solutions to the federal government.
+
+    \subsection{Appointment}
+    Appointment is a categorical variable representing if the position is expected to be permanent, nonpermanent, career, or career-conditional.
+
+    \subsection{Schedule}
+    A categorical variable describing if a position is full-time, part-time, intermittent, or seasonal.
+
+    \subsection{NSFTP}
+    Another categorical variable representing if a position representing is a position is seasonal for full-time, permanent employees. Can assume the following values.
+
+        \begin{center}
+            \begin{tabular}{ |c|c| }
+                \hline
+                NSFTP Code & Translation \\
+                \hline
+                1 & Non-seasonal, Full-time, Permanent \\
+                2 & Seasonal, Full-time, Permanent \\
+                \hline
+            \end{tabular}
+        \end{center}
 
 \section{Data Preparation}
 
@@ -137,6 +257,12 @@ Just because a president allocates money for a program, doesn't mean the payroll
     University of Virginia - Miller Center
     \textit{Barack Obama - Key Events}
     \texttt{https://millercenter.org/president/barack-obama/key-events}
+
+    \bibitem{datadefs}
+    United States Office of Personnel Management
+    \textit{FedScope Data Definitions}
+    \texttt{https://ia800608.us.archive.org/16/items/opm-federal-employment-data/docs/}
+    \texttt{FedScope\%20-\%20DataDefinitions}
 
 \end{thebibliography}
 

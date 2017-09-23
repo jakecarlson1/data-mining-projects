@@ -150,7 +150,7 @@ wash_and_dry(path_to_data, output_data_path, data_years, agencies_to_save)
 setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-1")
 library('ggplot2')
 data_dir <- "../clean-data/"
-df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",", nrows = 1000)
 
 
 # returns class of each column
