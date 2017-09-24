@@ -134,7 +134,7 @@ The status files contain relevant attributes needed for a payroll system such as
     The date the pay report is generated up to. Because the tables are quarterly, the date for each quarter will be the same for all entries. This is the last day in March, June, September, and December.
 
     \subsection{Agency}
-    This is a categorical variable representing the department the employee worked at. The departments are encoded as six characters. The first four characters represent the top level organization the department belongs to. The last two characters are unique to the department for identification. The provided file "SCTFILE.txt" can be sued to translate between the agency encoding and the actual name of the agency.
+    This is a categorical variable representing the department the employee worked at. The departments are encoded as six characters. The first four characters represent the top level organization the department belongs to. The last two characters are unique to the department for identification. The provided file "SCTFILE.txt" can be used to translate between the agency encoding and the actual name of the agency.
     \par
     For example, the Food and Drug Administration is encoded as 'AGHE36'. Here, AGHE refers to the Department of Health and Human Services. The value '36' is then used to identify the FDA specifically. All agency entries begin with 'AG' or 'AH', so these characters can be discarded.
 
@@ -281,8 +281,56 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
         Some agencies see a decrease in size between the two presidents. Notably, the IRS (TR) saw decreases in staffing at each interval I selected. Bush began the downsizing in the agency following his tax cuts, but the downsizing continued under Obama.
 
         \subsubsection{Station}
+        Let's look at the states with the most federal employment in the years chosen above. I will use substring to grab the first two characters in the Station column. I map this to the state name using a translation table provided in the data set. Then I count the occurances of the states and sort the entries in descending order.
+
+            \begin{center}
+                \begin{tabular}{ |c|c|c|c|c|c|c|c|c| }
+                    \hline
+                    year & 2001 & 2005 & 2009 & 2013 \\
+                    \hline
+                    rank & State | Count & State | Count & State | Count & State | Count \\
+                    \hline
+                    1 & DC | 195,701 & DC | 207,993 & DC | 231,997 & DC | 246,609 \\
+                    2 & California | 163,895 & California | 170,589 & California | 188,056 & California | 199,593 \\
+                    3 & Maryland | 156,112 & Maryland | 165,670 & Maryland | 177,874 & Maryland | 196,400 \\
+                    4 & Texas | 129,741 & Texas | 136,488 & Texas | 157,398 & Texas | 168,109 \\
+                    5 & New York | 114,721 & New York | 110,724 & Florida | 120,900 & Florida | 130,690 \\
+                    6 & Pennsylvania | 82,909 & Florida | 101,691 & New York | 117,739 & New York | 119,592 \\
+                    \hline
+                \end{tabular}
+            \end{center}
+
+        I expected the most populated states to have the most employees. It also makes sense that DC would have the most employees, being the center of the government. It is interesing how Florida gradually overtakes Pennsylvania and New York in the number of employees. Next I will provide the average number of employees in each state for each of these years. This will do a good job showing how the overall size of the govenrment changes over the course of this timespan.
+
+            \begin{center}
+                \begin{tabular}{ |c|c|c| }
+                    \hline
+                    Year & Average Employees \\
+                    \hline
+                    2001 & 41828.24 \\
+                    2005 & 43895.55 \\
+                    2008 & 49347.78 \\
+                    2013 & 52324.04 \\
+                    \hline
+                \end{tabular}
+            \end{center}
+
+        Interestingly, we see the largest increase in the average number of federal employees between the beginning of Bush's second term and the inauguration of Obama, despite the Republican's support for a smaller government. Also, Obama grows the government more in his first term than Bush did in his first term. I will have to explore these numbers more to see which agencies specifically were recieving additional employees.
+
+        \subsubsection{Age}
         
 
+        \subsubsection{Education}
+
+        \subsubsection{LOS}
+
+        \subsubsection{Category}
+
+        \subsubsection{Pay}
+
+        \subsubsection{SupervisoryStatus}
+
+        \subsubsection{NSFTP}
 
     \subsection{Data Visualization}
 
@@ -292,12 +340,21 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
 
 \newpage
 
-\begin{figure}
-    \centering{
-    \includegraphics[scale=0.4]{./images/simple-stat-agency.pdf}}
-    \caption{Number of employees at key departments}
-    \label{simpleagency}
-\end{figure}
+\begin{center}
+    \begin{figure}
+        \includegraphics[scale=0.4]{./images/simple-stat-agency.pdf}
+        \caption{Number of Employees at Key Departments}
+        \label{simpleagency}
+    \end{figure}
+\end{center}
+
+\begin{center}
+    \begin{figure}
+        \includegraphics[scale=0.3]{./images/employment-by-state-2001-2013.png}
+        \caption{Number of Federal Employees in Continental United States}
+        \label{employmentheatmap}
+    \end{figure}
+\end{center}
 
 \newpage
 

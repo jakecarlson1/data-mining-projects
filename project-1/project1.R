@@ -152,20 +152,19 @@ data_dir <- "../clean-data/"
 # read four years
 df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",")
 df_2005 <- read.csv(file = paste(data_dir, '2005-clean.csv', sep=""), header = TRUE, sep = ",")
-df_2008 <- read.csv(file = paste(data_dir, '2008-clean.csv', sep=""), header = TRUE, sep = ",")
-df_2012 <- read.csv(file = paste(data_dir, '2012-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2009 <- read.csv(file = paste(data_dir, '2009-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2013 <- read.csv(file = paste(data_dir, '2013-clean.csv', sep=""), header = TRUE, sep = ",")
 
 # remove Department of Labor
 df_2001 <- df_2001[!sapply(df_2001$Agency, FUN = function(x) substring(x, 1,2)) == "DL",]
 # remove Department of Agriculture
 df_2005 <- df_2005[!sapply(df_2005$Agency, FUN = function(x) substring(x, 1,2)) == "AG",]
-df_2008 <- df_2005[!sapply(df_2008$Agency, FUN = function(x) substring(x, 1,2)) == "AG",]
 
 # get employee count at each department
 agency_freq_2001 <- table(sapply(df_2001$Agency, FUN = function(x) substring(x, 1,2)))
 agency_freq_2005 <- table(sapply(df_2005$Agency, FUN = function(x) substring(x, 1,2)))
-agency_freq_2008 <- table(sapply(df_2008$Agency, FUN = function(x) substring(x, 1,2)))
-agency_freq_2012 <- table(sapply(df_2012$Agency, FUN = function(x) substring(x, 1,2)))
+agency_freq_2009 <- table(sapply(df_2009$Agency, FUN = function(x) substring(x, 1,2)))
+agency_freq_2013 <- table(sapply(df_2013$Agency, FUN = function(x) substring(x, 1,2)))
 
 # plot four plots
 par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
@@ -173,9 +172,9 @@ plot(agency_freq_2001, main = "Number of Employees 2001", xlab = "", ylab = "",
      yaxp = c(0, 1400000, 5), las = 2)
 plot(agency_freq_2005, main = "Number of Employees 2005", xlab = "", ylab = "",
      yaxp = c(0, 1400000, 5), las = 2)
-plot(agency_freq_2008, main = "Number of Employees 2008", xlab = "", ylab = "",
+plot(agency_freq_2009, main = "Number of Employees 2009", xlab = "", ylab = "",
      yaxp = c(0, 1400000, 5), las = 2)
-plot(agency_freq_2012, main = "Number of Employees 2012", xlab = "", ylab = "",
+plot(agency_freq_2013, main = "Number of Employees 2013", xlab = "", ylab = "",
      yaxp = c(0, 1400000, 5), las = 2)
 mtext(text = "Department", side = 1, line = 0, outer = TRUE)
 mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
@@ -212,16 +211,16 @@ df_lower_states_2001$Var1 <- NULL
 # merge with states geospatial data
 df_states_2001 <- merge(states, df_lower_states_2001, by = 'region', all.x = TRUE)
 
-# prep 2012
+# prep 2013
 # get employment count per state
-df_lower_states_2012 <- data.frame(table(tolower(state_trans$State[
-    match(sapply(df_2012$Station, FUN = function(x) substring(x, 1,2)),
+df_lower_states_2013 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2013$Station, FUN = function(x) substring(x, 1,2)),
           state_trans$Num)])))
 # create region column for matching
-df_lower_states_2012$region <- df_lower_states_2012$Var1
-df_lower_states_2012$Var1 <- NULL
+df_lower_states_2013$region <- df_lower_states_2013$Var1
+df_lower_states_2013$Var1 <- NULL
 # merge with states geospatial data
-df_states_2012 <- merge(states, df_lower_states_2012, by = 'region', all.x = TRUE)
+df_states_2013 <- merge(states, df_lower_states_2013, by = 'region', all.x = TRUE)
 
 # plot 2001
 map_2001 <- ggplot() +
@@ -235,19 +234,55 @@ map_2001 <- ggplot() +
     scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
     theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
 
-# plot 2012
-map_2012 <- ggplot() +
-    geom_polygon(data = df_states_2012, aes(x = df_states_2012$long, y = df_states_2012$lat,
-                                       group = df_states_2012$group,
-                                       fill = df_states_2012$Freq),
+# plot 2013
+map_2013 <- ggplot() +
+    geom_polygon(data = df_states_2013, aes(x = df_states_2013$long, y = df_states_2013$lat,
+                                       group = df_states_2013$group,
+                                       fill = df_states_2013$Freq),
                  colour="white") +
     scale_fill_gradientn(colours = c("thistle2", "darkred"), limits = range(0,250000)) +
     theme_bw() + labs(fill = "Employees per State",
-                      title = "Federal Employment by State, 2012", x="", y="") +
+                      title = "Federal Employment by State, 2013", x="", y="") +
     scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
     theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
 
-grid.arrange(map_2001, map_2012, ncol = 2)
+grid.arrange(map_2001, map_2013, ncol = 2)
+
+## simple stats of state employment counts ##
+df_lower_states_2001 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2001$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+
+df_lower_states_2005 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2005$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+
+df_lower_states_2009 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2009$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+
+df_lower_states_2013 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2013$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+
+# order most to least employees
+df_lower_states_2001 <- df_lower_states_2001[order(df_lower_states_2001$Freq, decreasing = TRUE),]
+df_lower_states_2005 <- df_lower_states_2005[order(df_lower_states_2005$Freq, decreasing = TRUE),]
+df_lower_states_2009 <- df_lower_states_2009[order(df_lower_states_2009$Freq, decreasing = TRUE),]
+df_lower_states_2013 <- df_lower_states_2013[order(df_lower_states_2013$Freq, decreasing = TRUE),]
+
+# print states with most employees
+head(df_lower_states_2001)
+head(df_lower_states_2005)
+head(df_lower_states_2009)
+head(df_lower_states_2013)
+
+# get mean
+mean(df_lower_states_2001$Freq)
+mean(df_lower_states_2005$Freq)
+mean(df_lower_states_2009$Freq)
+mean(df_lower_states_2013$Freq)
+
 
 # returns class of each column
 sapply(df, class)
