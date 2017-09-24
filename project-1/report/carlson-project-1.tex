@@ -98,6 +98,8 @@ Since Bush is a Republican, and Obama a Democrat, we would expect a dichotomy in
 
     \subsection{Congress}
     Just because a president allocates money for a program, doesn't mean the payroll for the agency responsible will be affected. Congress is ultimately responsible for managing the bidget of the U.S. government. This means that the party in control of the House of Representatives and the Senate has more control over the budget than the president. If the president leads the party that controls either the House or the Senate, they will likely be able to implement more of their policies. However, if the president's party is the minority party in either of the chambers, they will meet more opposition as they try to push policy. Table \ref{tab:1} shows the party in control of each chamber of Congress.
+    \par
+    Based on the majority party in each chamber of Congress, Bush should have faced minimal opposition for his first term and the first half of his second term. Obama entered office with a Democratic House and Senate. He should have been able to move policy most effectively during the first half of his first term. It will be interesting to see how his policy was effected by Republicans gaining back the House during his first term.
 
         \begin{center}
             \begin{table}
@@ -122,8 +124,6 @@ Since Bush is a Republican, and Obama a Democrat, we would expect a dichotomy in
                 \label{tab:1}
             \end{table}
         \end{center}
-
-    Based on the majority party in each chamber of Congress, Bush should have faced minimal opposition for his first term and the first half of his second term. Obama entered office with a Democratic House and Senate. He should have been able to move policy most effectively during the first half of his first term. It will be interesting to see how his policy was effected by Republicans gaining back the House during his first term.
 
 \section{Data Understanding}
 The federal payroll data was obtained through the Freedom of Information Act by BuzzFeed News. For this report I will be examining the status files, which contain payroll information for each agency organized by quarter. I will not be examining accessions or separations in this report.
@@ -157,7 +157,7 @@ The status files contain relevant attributes needed for a payroll system such as
     Pay plan is a two character categorical variable loosely representing the type of work the employee does. This is used by the governemnt to determine the rate of pay increases. Some examples are 'EE' for expert, 'EG' for consultant, and 'EX' for executive.
 
     \subsection{Grade}
-    Grade is a categorical vaiable used in conjunction with PayPlan to determine an employees basic pay rate.
+    Grade is a categorical variable used in conjunction with PayPlan to determine an employees basic pay rate.
 
     \subsection{LOS}
     LOS is an ordinal variable representing the length of service in years of the employee. Length of service is grouped by the following time spans: < 1, 1-2, 3-4, 5-9, 10-19, 20-24, 25-29, 30-34, and 35+.
@@ -193,6 +193,8 @@ The status files contain relevant attributes needed for a payroll system such as
 
     \subsection{SupervisoryStatus}
     A categorical variable representing what level of leadership the employee is at. This follows the translaton in Table \ref{tab:3}.
+    \par
+    Here, CSRA refers to a private organization that provides IT solutions to the federal government.
 
         \begin{center}
             \begin{table}
@@ -213,8 +215,6 @@ The status files contain relevant attributes needed for a payroll system such as
                 \label{tab:3}
             \end{table}
         \end{center}
-
-    Here, CSRA refers to a private organization that provides IT solutions to the federal government.
 
     \subsection{Appointment}
     Appointment is a categorical variable representing if the position is expected to be permanent, nonpermanent, career, or career-conditional.
@@ -308,6 +308,10 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
 
         \subsubsection{Station}
         Let's look at the states with the most federal employment in the years chosen above. I will use substring to grab the first two characters in the Station column. I map this to the state name using a translation table provided in the data set. Then I count the occurances of the states and sort the entries in descending order. The result can be seen in Table \ref{tab:6}.
+        \par
+        I expected the most populated states to have the most employees. It also makes sense that DC would have the most employees, being the center of the government. It is interesing how Florida gradually overtakes Pennsylvania and New York in the number of employees. Next I will provide the average number of employees in each state for each of these years. This will do a good job showing how the overall size of the govenrment changes over the course of this timespan. The averages can be seen in Table \ref{tab:7}.
+        \par
+        Interestingly, we see the largest increase in the average number of federal employees between the beginning of Bush's second term and the inauguration of Obama, despite the Republican's support for a smaller government. Also, Obama grows the government more in his first term than Bush did in his first term. I will have to explore these numbers more to see which agencies specifically were recieving additional employees.
 
             \begin{center}
                 \begin{table}
@@ -331,8 +335,6 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
                 \end{table}
             \end{center}
 
-        I expected the most populated states to have the most employees. It also makes sense that DC would have the most employees, being the center of the government. It is interesing how Florida gradually overtakes Pennsylvania and New York in the number of employees. Next I will provide the average number of employees in each state for each of these years. This will do a good job showing how the overall size of the govenrment changes over the course of this timespan. The averages can be seen in Table \ref{tab:7}.
-
             \begin{center}
                 \begin{table}
                     \centering
@@ -351,10 +353,10 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
                 \end{table}
             \end{center}
 
-        Interestingly, we see the largest increase in the average number of federal employees between the beginning of Bush's second term and the inauguration of Obama, despite the Republican's support for a smaller government. Also, Obama grows the government more in his first term than Bush did in his first term. I will have to explore these numbers more to see which agencies specifically were recieving additional employees.
-
         \subsubsection{Age}
         The most common employee ages for each of the presidents's terms can be seen in Table \ref{tab:8}.
+        \par
+        The most common age increases slightly under Bush. This is representative of an aging population of employees.
 
             \begin{center}
                 \begin{table}
@@ -374,12 +376,40 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
                 \end{table}
             \end{center}
 
-        The most common age increases slightly under Bush. This is representative of an aging population of employees.
-
         \subsubsection{Education}
+        There are 22 education levels employees can fall under. I will look at the three most common education levels for each of my years, and the number fo employees in each category. the results are in Table \ref{tab:9}.
 
+            \begin{center}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c|c| }
+                        \hline
+                        Year & Education Level & Count \\
+                        \hline
+                        & Bachelor's Degree & 691,023 \\
+                        2001 & High School Graduate & 582,996 \\
+                        & Master's Degree & 254,444 \\
+                        \hline
+                        & Bachelor's Degree & 812,014 \\
+                        2005 & High School Graduate & 809,430 \\
+                        & Master's Degree & 312,071 \\
+                        \hline
+                        & Bachelor's Degree & 950,459 \\
+                        2009 & High School Graduate & 837,441 \\
+                        & Master's Degree & 400,777 \\
+                        \hline
+                        & Bachelor's Degree & 1,033,993 \\
+                        2013 & High School Graduate & 839,401 \\
+                        & Master's Degree & 499,255 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Employees at the Most Common Education Levels by Year}
+                    \label{tab:9}
+                \end{table}
+            \end{center}
 
         \subsubsection{LOS}
+        
 
         \subsubsection{Category}
 

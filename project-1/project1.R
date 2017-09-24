@@ -294,6 +294,33 @@ barplot(table(df_2013$Age), main = "Ages of Employees 2013")
 mtext(text = "Age Intervals (years)", side = 1, line = 0, outer = TRUE)
 mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 
+## do it again for education ##
+# plot histograms for the four years
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+barplot(table(df_2001$Education), main = "Education of Employees 2001")
+barplot(table(df_2005$Education), main = "Education of Employees 2005")
+barplot(table(df_2009$Education), main = "Education of Employees 2009")
+barplot(table(df_2013$Education), main = "Education of Employees 2013")
+mtext(text = "Education", side = 1, line = 0, outer = TRUE)
+mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
+
+# get three most common education levels in descending order
+df_2001_edu <- data.frame(table(df_2001$Education))
+df_2001_edu <- df_2001_edu[order(df_2001_edu$Freq, decreasing = TRUE),]
+df_2001_edu[1:3,]
+
+df_2005_edu <- data.frame(table(df_2005$Education))
+df_2005_edu <- df_2005_edu[order(df_2005_edu$Freq, decreasing = TRUE),]
+df_2005_edu[1:3,]
+
+df_2009_edu <- data.frame(table(df_2009$Education))
+df_2009_edu <- df_2009_edu[order(df_2009_edu$Freq, decreasing = TRUE),]
+df_2009_edu[1:3,]
+
+df_2013_edu <- data.frame(table(df_2013$Education))
+df_2013_edu <- df_2013_edu[order(df_2013_edu$Freq, decreasing = TRUE),]
+df_2013_edu[1:3,]
+
 
 # returns class of each column
 sapply(df, class)
