@@ -197,11 +197,15 @@ library('gridExtra')
 state_trans <- read.csv('./state-trans.txt', header = TRUE)
 states <- map_data('state')
 
+# prepend zero to states with number < 10
+state_trans$Num <- sapply(state_trans$Num, FUN = function(x) formatC(x, width = 2, format = "d", flag = "0"))
+
 # prep 2001
 # get employment count per state
 df_lower_states_2001 <- data.frame(table(tolower(state_trans$State[
     match(sapply(df_2001$Station, FUN = function(x) substring(x, 1,2)),
           state_trans$Num)])))
+
 # create region column for matching
 df_lower_states_2001$region <- df_lower_states_2001$Var1
 df_lower_states_2001$Var1 <- NULL
