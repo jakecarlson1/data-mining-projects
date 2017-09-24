@@ -321,6 +321,22 @@ df_2013_edu <- data.frame(table(df_2013$Education))
 df_2013_edu <- df_2013_edu[order(df_2013_edu$Freq, decreasing = TRUE),]
 df_2013_edu[1:3,]
 
+## most common LOS ##
+# make ordered factor
+lvls <- c("< 1","1-2","3-4","5-9","10-14","15-19","20-24","25-29","30-34","35+")
+df_2001$LOS <- factor(df_2001$LOS, ordered = TRUE, levels = lvls)
+df_2005$LOS <- factor(df_2005$LOS, ordered = TRUE, levels = lvls)
+df_2009$LOS <- factor(df_2009$LOS, ordered = TRUE, levels = lvls)
+df_2013$LOS <- factor(df_2013$LOS, ordered = TRUE, levels = lvls)
+
+# plot histograms for the four years
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+barplot(table(df_2001$LOS), main = "LOS of Employees 2001", las = 2)
+barplot(table(df_2005$LOS), main = "LOS of Employees 2005", las = 2)
+barplot(table(df_2009$LOS), main = "LOS of Employees 2009", las = 2)
+barplot(table(df_2013$LOS), main = "LOS of Employees 2013", las = 2)
+mtext(text = "Length of Service", side = 1, line = 0, outer = TRUE)
+mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 
 # returns class of each column
 sapply(df, class)
