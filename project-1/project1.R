@@ -229,7 +229,7 @@ map_2001 <- ggplot() +
                                             group = df_states_2001$group,
                                             fill = df_states_2001$Freq),
                  colour="white") +
-    scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") +
+    scale_fill_gradientn(colours = c("thistle2", "darkred"), limits = range(0,250000)) +
     theme_bw() + labs(fill = "Employees per State",
                       title = "Federal Employment by State, 2001", x="", y="") +
     scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
@@ -241,7 +241,7 @@ map_2012 <- ggplot() +
                                        group = df_states_2012$group,
                                        fill = df_states_2012$Freq),
                  colour="white") +
-    scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") +
+    scale_fill_gradientn(colours = c("thistle2", "darkred"), limits = range(0,250000)) +
     theme_bw() + labs(fill = "Employees per State",
                       title = "Federal Employment by State, 2012", x="", y="") +
     scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
