@@ -431,20 +431,81 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
                 \end{table}
             \end{center}
 
-        \subsubsection{Category}
-
         \subsubsection{Pay}
+        Here we will look at the mean, median, and max pay for each of the four years. These values are recorded in Table \ref{tab:11}.
+        \par
+        We can see that the average pay increases across all of the years we looked at. The average pay jumps \$9,800 from 2001-2005, \$10,100 from 2005-2009, and \$5,000 from 2009-2013. It is interesting that the lowest pay increases occured under Obama, but it makes sense as Obama was tyring to get spending under control and combat the financial crisis.
+        \par
+        Another interesting point is that the max pay increased from \$200,000 when Bush took office to \$401,589 when Obama was inaugurated the second time. Because all of the means are greater than the medians, these large max pays are outliers pulling up the average.
+
+            \begin{center}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c|c|c| }
+                        \hline
+                        Year & Mean & Median & Max \\
+                        \hline
+                        2001 & \$54,079 & \$48,649 & \$200,000 \\
+                        2005 & \$63,872 & \$57,168 & \$250,000 \\
+                        2009 & \$73,890 & \$64,961 & \$393,411 \\
+                        2013 & \$79,207 & \$72,722 & \$401,589 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Mean, Median, and Max Pay by Year}
+                    \label{tab:11}
+                \end{table}
+            \end{center}
 
         \subsubsection{SupervisoryStatus}
+        I will take the mode of SupervisoryStatus to find what most employees are classified as. The results are in Table \ref{tab:12}.
+        \par
+        The most common employee is categorized as "Other", meaning they are not a supervisor. The second most common posiiton is "Supervisor or Manager". I will take the ratio of these to see approximately how many employees report to one supervisor.
+        \par
+        Interestingly, the approximate number of employees reporting to a supervisor consistently shrunk over this timespan. This could mean that supervisors are expected to pick up more responsibilities when they reach supervisor status.
 
-        \subsubsection{NSFTP}
+            \begin{center}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c| }
+                        \hline
+                        Year & Mode \\
+                        \hline
+                        2001 & Other \\
+                        2005 & Other \\
+                        2009 & Other \\
+                        2013 & Other \\
+                        \hline
+                    \end{tabular}
+                    \caption{Most Common SupervisoryStatus Classification by Year}
+                    \label{tab:12}
+                \end{table}
+            \end{center}
+
+            \begin{center}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c| }
+                        \hline
+                        Year & Ratio Other to Supervisor \\
+                        \hline
+                        2001 & 8.1 \\
+                        2005 & 7.7 \\
+                        2009 & 7.6 \\
+                        2013 & 7.1 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Ratio of Other Type Employees to Supervisors by Year}
+                    \label{tab:12}
+                \end{table}
+            \end{center}
+
 
     \subsection{Data Visualization}
 
         \subsubsection{Agency}
 
         \subsubsection{Age}
-        I will now look at histograms for the number of employees in each age interval for my selected years. See Figure \ref{agehistograms}. With the four plots, we can watch as employees age. Namely, we see employees aged 50-54 entering the 55-59 interval between years 2001 and 2005. We can also see a hiring surge of younger employees in Obama's first term as a negative slant in the 2013 bow plot. Lastly, we can see that older employees are choosing to retire at later ages by the increase in size of the bars for the age intervals 60-64, 65-69, and 70-74.
+        I will now look at histograms for the number of employees in each age interval for my selected years. See Figure \ref{agehistograms}. With the four plots, we can watch as employees age. Namely, we see employees aged 50-54 entering the 55-59 interval between years 2001 and 2005. We can also see a hiring surge of younger employees in Obama's first term as a negative slant in the 2013 box plot. Lastly, we can see that older employees are choosing to retire at later ages by the increase in size of the bars for the age intervals 60-64, 65-69, and 70-74.
 
         \subsubsection{Education}
 

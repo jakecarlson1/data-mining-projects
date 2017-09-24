@@ -338,6 +338,43 @@ barplot(table(df_2013$LOS), main = "LOS of Employees 2013", las = 2)
 mtext(text = "Length of Service", side = 1, line = 0, outer = TRUE)
 mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 
+
+## simple stat for pay ##
+summary(df_2001$Pay)
+summary(df_2005$Pay)
+summary(df_2009$Pay)
+summary(df_2013$Pay)
+
+# define mode function
+getmode <- function(v) {
+    uniqv <- unique(v)
+    uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# get mode
+getmode(df_2001$Pay)
+getmode(df_2005$Pay)
+getmode(df_2009$Pay)
+getmode(df_2013$Pay)
+
+
+## simple stat supervisory status ##
+# histograms
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+barplot(table(df_2001$SupervisoryStatus), main = "Supervisory Status of Employees 2001", las = 2)
+barplot(table(df_2005$SupervisoryStatus), main = "Supervisory Status of Employees 2005", las = 2)
+barplot(table(df_2009$SupervisoryStatus), main = "Supervisory Status of Employees 2009", las = 2)
+barplot(table(df_2013$SupervisoryStatus), main = "Supervisory Status of Employees 2013", las = 2)
+mtext(text = "Supervisory Status", side = 1, line = 0, outer = TRUE)
+mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
+
+# ratio other to supervisors
+df_2001_super <- data.frame(table(df_2001$SupervisoryStatus))
+df_2005_super <- data.frame(table(df_2005$SupervisoryStatus))
+df_2009_super <- data.frame(table(df_2009$SupervisoryStatus))
+df_2013_super <- data.frame(table(df_2013$SupervisoryStatus))
+
+
 # returns class of each column
 sapply(df, class)
 
