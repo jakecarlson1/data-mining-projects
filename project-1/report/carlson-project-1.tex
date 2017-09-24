@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{graphicx}
 
 \begin{document}
 
@@ -236,7 +237,6 @@ The data comes in text files with fixed width columns. Dr. Hahsler provided us w
                 Department of Energy & AGDN, AHDN \\
                 Department of Education & AGED, AHED \\
                 Department of Justice & AGDJ, AHDJ \\
-                Department of Defense & AGDD, AHDD \\
                 Department of the Interior & AGIN, AHIN \\
                 Department of Transportation & AGTD, AHTD \\
                 Environmental Protection Agency & AGEP, AHEP \\
@@ -267,11 +267,37 @@ The data comes in text files with fixed width columns. Dr. Hahsler provided us w
     \subsection{Duplicates}
     Next, I handle duplicate PseudoIDs. As stated earlier, a PseudoID will occur multiple times if an employee changed agencies during the quarter or if their pay changed. If an employee changed organization, I will want to include their salary when determining the total value of the payroll for each of those organizations, so these entries will be left as is. However, if an employee simply recieved a raise while working at the same organization, I want to remove the lower of the salaries. This makes the assumption that the employee earned that same ammont during the whole quarter, but since we are looking at payroll data with the level of granularity of the quarter year, this is acceptable.
 
-\section{Modeling}
+\section{Analysis}
+With the data set cleaned, I can now begin analysis. We will start with simple data exploration to find the attributes that are most useful for describing changes to the federal government.
 
-\section{Evaluation}
+    \subsection{Simple Statistics}
+    I will skip simple statistics for PseudoID and Date because their values are used only for identification of individuals and time.
+
+        \subsubsection{Agency}
+        The Agency attribute is useful for determining the number of employees at an agency. I selected the years 2001, 2005, 2008, and 2012 to examine how employment at my selected agencies changed over the course of four presidential terms. See Figure \ref{simpleagency}.
+        \par
+        This figure shows dome interesting trends. First and most notable is the creation of the Department of Homeland Security (HS) by Bush following 9/11. The agency does not show up in 2001, but is the second largest of my choosen agencies by 2005. Also, the size of the agency increases under President Obama. Another agency that grows under Obama is the Office of Veterans Affairs (VA). This is likely in response to the post-911 GI Bill signed by Obama in 2010.
+        \par
+        Some agencies see a decrease in size between the two presidents. Notably, the IRS (TR) saw decreases in staffing at each interval I selected. Bush began the downsizing in the agency following his tax cuts, but the downsizing continued under Obama.
+
+        \subsubsection{Station}
+        
+
+
+    \subsection{Data Visualization}
+
+    \subsection{Relationships}
 
 \section{Conclusion}
+
+\newpage
+
+\begin{figure}
+    \centering{
+    \includegraphics[scale=0.4]{./images/simple-stat-agency.pdf}}
+    \caption{Number of employees at key departments}
+    \label{simpleagency}
+\end{figure}
 
 \newpage
 

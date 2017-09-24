@@ -115,7 +115,6 @@ data_years <- c(2001:2014)
 # DO Energy | AGDN, AHDN
 # DO Education | AGED, AHED
 # DOJ | AGDJ, AHDJ
-# DOD | AGDD, AHDD
 # FEMA | AGEM, AHEM
 # Gen Services | AGGS, AHGS
 # DO Interior | AGIN, AHIN
@@ -131,7 +130,6 @@ agencies_to_save <- c("AGEP", "AHEP",
                       "AGDN", "AHDN",
                       "AGED", "AHED",
                       "AGDJ", "AHDJ",
-                      "AGDD", "AHDD",
                       "AGEM", "AHEM",
                       "AGGS", "AHGS",
                       "AGIN", "AHIN",
@@ -146,12 +144,106 @@ agencies_to_save <- sapply(agencies_to_save, FUN = function(x) substring(x, 3,6)
 wash_and_dry(path_to_data, output_data_path, data_years, agencies_to_save)
 
 
-# data visualization
+### data visualization ###
 setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-1")
-library('ggplot2')
 data_dir <- "../clean-data/"
-df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",")
 
+## visualize basic changes in employment in each of my choosen departments ##
+# read four years
+df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2005 <- read.csv(file = paste(data_dir, '2005-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2008 <- read.csv(file = paste(data_dir, '2008-clean.csv', sep=""), header = TRUE, sep = ",")
+df_2012 <- read.csv(file = paste(data_dir, '2012-clean.csv', sep=""), header = TRUE, sep = ",")
+
+# remove Department of Labor
+df_2001 <- df_2001[!sapply(df_2001$Agency, FUN = function(x) substring(x, 1,2)) == "DL",]
+# remove Department of Agriculture
+df_2005 <- df_2005[!sapply(df_2005$Agency, FUN = function(x) substring(x, 1,2)) == "AG",]
+df_2008 <- df_2005[!sapply(df_2008$Agency, FUN = function(x) substring(x, 1,2)) == "AG",]
+
+# get employee count at each department
+agency_freq_2001 <- table(sapply(df_2001$Agency, FUN = function(x) substring(x, 1,2)))
+agency_freq_2005 <- table(sapply(df_2005$Agency, FUN = function(x) substring(x, 1,2)))
+agency_freq_2008 <- table(sapply(df_2008$Agency, FUN = function(x) substring(x, 1,2)))
+agency_freq_2012 <- table(sapply(df_2012$Agency, FUN = function(x) substring(x, 1,2)))
+
+# plot four plots
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(agency_freq_2001, main = "Number of Employees 2001", xlab = "", ylab = "",
+     yaxp = c(0, 1400000, 5), las = 2)
+plot(agency_freq_2005, main = "Number of Employees 2005", xlab = "", ylab = "",
+     yaxp = c(0, 1400000, 5), las = 2)
+plot(agency_freq_2008, main = "Number of Employees 2008", xlab = "", ylab = "",
+     yaxp = c(0, 1400000, 5), las = 2)
+plot(agency_freq_2012, main = "Number of Employees 2012", xlab = "", ylab = "",
+     yaxp = c(0, 1400000, 5), las = 2)
+mtext(text = "Department", side = 1, line = 0, outer = TRUE)
+mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
+# legend(x = "center", ncol = 3,
+#        legend = c("DJ - DOJ", "DN - DOE", "ED - DO Education",
+#                   "EM - FEMA", "EP - EPA", "GS - Gen. Services",
+#                   "HE - DOHHS", "HS - Homeland Sec.", "HU - HUD",
+#                   "IN - DO Interior", "NN - NASA", "TD - DOT",
+#                   "TR - IRS", "VA - Veterans Affairs"))
+
+
+## visualize the distribution of employees in continental US ##
+# adapted from:
+# https://stackoverflow.com/questions/24441775/how-do-you-create-a-us-states-heatmap-based-on-some-values
+# https://www.r-bloggers.com/us-state-maps-using-map_data/
+library('ggplot2')
+library('maps')
+library('gridExtra')
+state_trans <- read.csv('./state-trans.txt', header = TRUE)
+states <- map_data('state')
+
+# prep 2001
+# get employment count per state
+df_lower_states_2001 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2001$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+# create region column for matching
+df_lower_states_2001$region <- df_lower_states_2001$Var1
+df_lower_states_2001$Var1 <- NULL
+# merge with states geospatial data
+df_states_2001 <- merge(states, df_lower_states_2001, by = 'region', all.x = TRUE)
+
+# prep 2012
+# get employment count per state
+df_lower_states_2012 <- data.frame(table(tolower(state_trans$State[
+    match(sapply(df_2012$Station, FUN = function(x) substring(x, 1,2)),
+          state_trans$Num)])))
+# create region column for matching
+df_lower_states_2012$region <- df_lower_states_2012$Var1
+df_lower_states_2012$Var1 <- NULL
+# merge with states geospatial data
+df_states_2012 <- merge(states, df_lower_states_2012, by = 'region', all.x = TRUE)
+
+# plot 2001
+map_2001 <- ggplot() +
+    geom_polygon(data = df_states_2001, aes(x = df_states_2001$long, y = df_states_2001$lat,
+                                            group = df_states_2001$group,
+                                            fill = df_states_2001$Freq),
+                 colour="white") +
+    scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") +
+    theme_bw() + labs(fill = "Employees per State",
+                      title = "Federal Employment by State, 2001", x="", y="") +
+    scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
+    theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
+
+# plot 2012
+map_2012 <- ggplot() +
+    geom_polygon(data = df_states_2012, aes(x = df_states_2012$long, y = df_states_2012$lat,
+                                       group = df_states_2012$group,
+                                       fill = df_states_2012$Freq),
+                 colour="white") +
+    scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar") +
+    theme_bw() + labs(fill = "Employees per State",
+                      title = "Federal Employment by State, 2012", x="", y="") +
+    scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
+    theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
+
+grid.arrange(map_2001, map_2012, ncol = 2)
 
 # returns class of each column
 sapply(df, class)
