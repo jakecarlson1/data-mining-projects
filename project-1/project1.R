@@ -284,6 +284,17 @@ mean(df_lower_states_2009$Freq)
 mean(df_lower_states_2013$Freq)
 
 
+## get simple stats for age ##
+# plot histograms for the four years
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+barplot(table(df_2001$Age), main = "Ages of Employees 2001")
+barplot(table(df_2005$Age), main = "Ages of Employees 2005")
+barplot(table(df_2009$Age), main = "Ages of Employees 2009")
+barplot(table(df_2013$Age), main = "Ages of Employees 2013")
+mtext(text = "Age Intervals (years)", side = 1, line = 0, outer = TRUE)
+mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
+
+
 # returns class of each column
 sapply(df, class)
 

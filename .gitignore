@@ -14,3 +14,4 @@ clean-data/
 */report/*.log
 */report/*.synctex.gz
 */report/*.toc
+*/report/*.out

@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -96,25 +97,30 @@ Since Bush is a Republican, and Obama a Democrat, we would expect a dichotomy in
         As Obama entered his second term, he put immigration reform and climate change in the spotlight. He outlined a plan for comprehensive immigration reform just after his first week of being reelected. He followed a few months later with the Climate Action Plan, which was meant to lower carbon polution and prepare the country for the pending effects of climate change. He made it clear that reversing climate change is a task for the whole planet.\cite{obamaevents} As Obama steps up his fight against cliamte change, we would expect the EPA to receive additional funding for cliamte science. It will also be interesint to see how Customs and Border Protection responed to his immigration reform.
 
     \subsection{Congress}
-    Just because a president allocates money for a program, doesn't mean the payroll for the agency responsible will be affected. Congress is ultimately responsible for managing the bidget of the U.S. government. This means that the party in control of the House of Representatives and the Senate has more control over the budget than the president. If the president leads the party that controls either the House or the Senate, they will likely be able to implement more of their policies. However, if the president's party is the minority party in either of the chambers, they will meet more opposition as they try to push policy.
+    Just because a president allocates money for a program, doesn't mean the payroll for the agency responsible will be affected. Congress is ultimately responsible for managing the bidget of the U.S. government. This means that the party in control of the House of Representatives and the Senate has more control over the budget than the president. If the president leads the party that controls either the House or the Senate, they will likely be able to implement more of their policies. However, if the president's party is the minority party in either of the chambers, they will meet more opposition as they try to push policy. Table \ref{tab:1} shows the party in control of each chamber of Congress.
 
         \begin{center}
-            \begin{tabular}{ |c|c|c|c| }
-                \hline
-                \multicolumn{4}{|c|}{Majority Party} \\
-                \hline
-                Year & President & Senate & House \\
-                \hline
-                2001 & Bush & Republican & Republican \\
-                2003 & Bush & Republican & Republican \\
-                2005 & Bush & Republican & Republican \\
-                2007 & Bush & Democratic & Democratic \\
-                2009 & Obama & Democratic & Democratic \\
-                2011 & Obama & Democratic & Republican \\
-                2013 & Obama & Democratic & Republican \\
-                2015 & Obama & Republican & Republican \\
-                \hline
-            \end{tabular}
+            \begin{table}
+                \centering
+                \begin{tabular}{ |c|c|c|c| }
+                    \hline
+                    \multicolumn{4}{|c|}{Majority Party} \\
+                    \hline
+                    Year & President & Senate & House \\
+                    \hline
+                    2001 & Bush & Republican & Republican \\
+                    2003 & Bush & Republican & Republican \\
+                    2005 & Bush & Republican & Republican \\
+                    2007 & Bush & Democratic & Democratic \\
+                    2009 & Obama & Democratic & Democratic \\
+                    2011 & Obama & Democratic & Republican \\
+                    2013 & Obama & Democratic & Republican \\
+                    2015 & Obama & Republican & Republican \\
+                    \hline
+                \end{tabular}
+                \caption{Party in Control of the House and the Senate}
+                \label{tab:1}
+            \end{table}
         \end{center}
 
     Based on the majority party in each chamber of Congress, Bush should have faced minimal opposition for his first term and the first half of his second term. Obama entered office with a Democratic House and Senate. He should have been able to move policy most effectively during the first half of his first term. It will be interesting to see how his policy was effected by Republicans gaining back the House during his first term.
@@ -160,42 +166,52 @@ The status files contain relevant attributes needed for a payroll system such as
     Occupation is a categorical variable classifying workers as blue or white collar. The value can be more desciptive by looking into occupation families, but the data attribute category also encodes this information so I will not be using this field.
 
     \subsection{Category}
-    Category is a categorical variable representing the type of work the employee does. It is a single character in the PATCO acronym which translates as follows.
+    Category is a categorical variable representing the type of work the employee does. It is a single character in the PATCO acronym which follows the translation in Table \ref{tab:2}.
 
         \begin{center}
-            \begin{tabular}{ |c|c| }
-                \hline
-                Letter & Translation \\
-                \hline
-                P & Professional \\
-                A & Administrative \\
-                T & Technical \\
-                C & Clerical \\
-                O & Other White Collar \\
-                B & Blue Collar \\
-                \hline
-            \end{tabular}
+            \begin{table}
+                \centering
+                \begin{tabular}{ |c|c| }
+                    \hline
+                    Letter & Translation \\
+                    \hline
+                    P & Professional \\
+                    A & Administrative \\
+                    T & Technical \\
+                    C & Clerical \\
+                    O & Other White Collar \\
+                    B & Blue Collar \\
+                    \hline
+                \end{tabular}
+                \caption{PATCO Translation}
+                \label{tab:2}
+            \end{table}
         \end{center}
 
     \subsection{Pay}
     Pay is a ratio representing the annual pay of the employee in U.S. dollars.
 
     \subsection{SupervisoryStatus}
-    A categorical variable representing what level of leadership the employee is at. This follows the following translation.
+    A categorical variable representing what level of leadership the employee is at. This follows the translaton in Table \ref{tab:3}.
 
         \begin{center}
-            \begin{tabular}{ |c|c| }
-                \hline
-                Status Code & Translation \\
-                \hline
-                2 & Supervisor or Manager \\
-                4 & Supervisor (CSRA) \\
-                5 & Management Official (CSRA) \\
-                6 & Leader \\
-                7 & Team Leader \\
-                8 & All Other Positions \\
-                \hline
-            \end{tabular}
+            \begin{table}
+                \centering
+                \begin{tabular}{ |c|c| }
+                    \hline
+                    Status Code & Translation \\
+                    \hline
+                    2 & Supervisor or Manager \\
+                    4 & Supervisor (CSRA) \\
+                    5 & Management Official (CSRA) \\
+                    6 & Leader \\
+                    7 & Team Leader \\
+                    8 & All Other Positions \\
+                    \hline
+                \end{tabular}
+                \caption{Supervisory Status Translation}
+                \label{tab:3}
+            \end{table}
         \end{center}
 
     Here, CSRA refers to a private organization that provides IT solutions to the federal government.
@@ -207,47 +223,57 @@ The status files contain relevant attributes needed for a payroll system such as
     A categorical variable describing if a position is full-time, part-time, intermittent, or seasonal.
 
     \subsection{NSFTP}
-    Another categorical variable representing if a position representing is a position is seasonal for full-time, permanent employees. Can assume the following values.
+    Another categorical variable representing if a position representing is a position is seasonal for full-time, permanent employees. NSFTP can be translated using Table \ref{tab:4}.
 
         \begin{center}
-            \begin{tabular}{ |c|c| }
-                \hline
-                NSFTP Code & Translation \\
-                \hline
-                1 & Non-seasonal, Full-time, Permanent \\
-                2 & Seasonal, Full-time, Permanent \\
-                \hline
-            \end{tabular}
+            \begin{table}
+                \centering
+                \begin{tabular}{ |c|c| }
+                    \hline
+                    NSFTP Code & Translation \\
+                    \hline
+                    1 & Non-seasonal, Full-time, Permanent \\
+                    2 & Seasonal, Full-time, Permanent \\
+                    \hline
+                \end{tabular}
+                \caption{NSFTP Code Translation}
+                \label{tab:4}
+            \end{table}
         \end{center}
 
 \section{Data Preparation}
 The data comes in text files with fixed width columns. Dr. Hahsler provided us with some initial code to read in one of the text files, break up the attributes into columns, apply a header to the columns, remove common characters from the Agency column, and create a new column called AgencyName with the translation from the four character Agency identifier to the full agency name. This is was a good starting point, however, there is more to be done before the data is clean enough to begin analysis. After my cleaning pipeline was functional, I wrote R code to apply the pipeline to every status file in the data set. I grouped cleaned data frames by year and saved each year to its own CSV file for quick reloading as I moved into data modeling.
 
     \subsection{Agency Subsetting}
-    The first thing I do is throw out agencies that I don't want to examine. Based on my business understanding, I selected agencies that were specifically mentioned as receiving attention by each president at some point in their two terms. I also selected agencies that I thought would show differences in the political affiliations and leadership policies of the two presidents. I perform this subsetting as the first stage in my pipeline to reduce the amount of data that has to flow through the rest of the pipeline. Here are the agencies I chose.
+    The first thing I do is throw out agencies that I don't want to examine. Based on my business understanding, I selected agencies that were specifically mentioned as receiving attention by each president at some point in their two terms. I also selected agencies that I thought would show differences in the political affiliations and leadership policies of the two presidents. I perform this subsetting as the first stage in my pipeline to reduce the amount of data that has to flow through the rest of the pipeline. The agencies I chose are listed in Table \ref{tab:5}.
 
         \begin{center}
-            \begin{tabular}{ |c|c| }
-                \hline
-                Agency & Agency Code \\
-                \hline
-                Department of Health and Human Sevices & AGHE, AHHE \\
-                Department of Homeland Security & AGHS, AHHS \\
-                Department of Housing and Urban Development & AGHU, AHHU \\
-                Department of Energy & AGDN, AHDN \\
-                Department of Education & AGED, AHED \\
-                Department of Justice & AGDJ, AHDJ \\
-                Department of the Interior & AGIN, AHIN \\
-                Department of Transportation & AGTD, AHTD \\
-                Environmental Protection Agency & AGEP, AHEP \\
-                Federal Emergency Management Agency & AGEM, AHEM \\
-                General Services & AGGS, AHGS \\
-                NASA & AGNN, AHNN \\
-                National Security Agency & AGSP, AHSP \\
-                Internal Revenue Service & AGTR07, AGTR93 \\
-                Veterans Affairs & AGVA, AHVA \\
-                \hline
-            \end{tabular}
+            \begin{table}
+                \centering
+                \begin{tabular}{ |c|c| }
+                    \hline
+                    Agency & Agency Code \\
+                    \hline
+                    Department of Health and Human Sevices & AGHE, AHHE \\
+                    Department of Homeland Security & AGHS, AHHS \\
+                    Department of Housing and Urban Development & AGHU, AHHU \\
+                    Department of Energy & AGDN, AHDN \\
+                    Department of Education & AGED, AHED \\
+                    Department of Justice & AGDJ, AHDJ \\
+                    Department of the Interior & AGIN, AHIN \\
+                    Department of Transportation & AGTD, AHTD \\
+                    Environmental Protection Agency & AGEP, AHEP \\
+                    Federal Emergency Management Agency & AGEM, AHEM \\
+                    General Services & AGGS, AHGS \\
+                    NASA & AGNN, AHNN \\
+                    National Security Agency & AGSP, AHSP \\
+                    Internal Revenue Service & AGTR07, AGTR93 \\
+                    Veterans Affairs & AGVA, AHVA \\
+                    \hline
+                \end{tabular}
+                \caption{Agencies Chosen for Analysis}
+                \label{tab:5}
+            \end{table}
         \end{center}
 
     \subsection{Unknown Values}
@@ -281,46 +307,77 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
         Some agencies see a decrease in size between the two presidents. Notably, the IRS (TR) saw decreases in staffing at each interval I selected. Bush began the downsizing in the agency following his tax cuts, but the downsizing continued under Obama.
 
         \subsubsection{Station}
-        Let's look at the states with the most federal employment in the years chosen above. I will use substring to grab the first two characters in the Station column. I map this to the state name using a translation table provided in the data set. Then I count the occurances of the states and sort the entries in descending order.
+        Let's look at the states with the most federal employment in the years chosen above. I will use substring to grab the first two characters in the Station column. I map this to the state name using a translation table provided in the data set. Then I count the occurances of the states and sort the entries in descending order. The result can be seen in Table \ref{tab:6}.
 
             \begin{center}
-                \begin{tabular}{ |c|c|c|c|c|c|c|c|c| }
-                    \hline
-                    year & 2001 & 2005 & 2009 & 2013 \\
-                    \hline
-                    rank & State | Count & State | Count & State | Count & State | Count \\
-                    \hline
-                    1 & DC | 195,701 & DC | 207,993 & DC | 231,997 & DC | 246,609 \\
-                    2 & California | 163,895 & California | 170,589 & California | 188,056 & California | 199,593 \\
-                    3 & Maryland | 156,112 & Maryland | 165,670 & Maryland | 177,874 & Maryland | 196,400 \\
-                    4 & Texas | 129,741 & Texas | 136,488 & Texas | 157,398 & Texas | 168,109 \\
-                    5 & New York | 114,721 & New York | 110,724 & Florida | 120,900 & Florida | 130,690 \\
-                    6 & Pennsylvania | 82,909 & Florida | 101,691 & New York | 117,739 & New York | 119,592 \\
-                    \hline
-                \end{tabular}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c|c|c|c|c|c|c|c| }
+                        \hline
+                        year & 2001 & 2005 & 2009 & 2013 \\
+                        \hline
+                        rank & State | Count & State | Count & State | Count & State | Count \\
+                        \hline
+                        1 & DC | 195,701 & DC | 207,993 & DC | 231,997 & DC | 246,609 \\
+                        2 & California | 163,895 & California | 170,589 & California | 188,056 & California | 199,593 \\
+                        3 & Maryland | 156,112 & Maryland | 165,670 & Maryland | 177,874 & Maryland | 196,400 \\
+                        4 & Texas | 129,741 & Texas | 136,488 & Texas | 157,398 & Texas | 168,109 \\
+                        5 & New York | 114,721 & New York | 110,724 & Florida | 120,900 & Florida | 130,690 \\
+                        6 & Pennsylvania | 82,909 & Florida | 101,691 & New York | 117,739 & New York | 119,592 \\
+                        \hline
+                    \end{tabular}
+                    \caption{States with the Highest Number of Employees}
+                    \label{tab:6}
+                \end{table}
             \end{center}
 
-        I expected the most populated states to have the most employees. It also makes sense that DC would have the most employees, being the center of the government. It is interesing how Florida gradually overtakes Pennsylvania and New York in the number of employees. Next I will provide the average number of employees in each state for each of these years. This will do a good job showing how the overall size of the govenrment changes over the course of this timespan.
+        I expected the most populated states to have the most employees. It also makes sense that DC would have the most employees, being the center of the government. It is interesing how Florida gradually overtakes Pennsylvania and New York in the number of employees. Next I will provide the average number of employees in each state for each of these years. This will do a good job showing how the overall size of the govenrment changes over the course of this timespan. The averages can be seen in Table \ref{tab:7}.
 
             \begin{center}
-                \begin{tabular}{ |c|c|c| }
-                    \hline
-                    Year & Average Employees \\
-                    \hline
-                    2001 & 41828.24 \\
-                    2005 & 43895.55 \\
-                    2008 & 49347.78 \\
-                    2013 & 52324.04 \\
-                    \hline
-                \end{tabular}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c|c| }
+                        \hline
+                        Year & Average Employees \\
+                        \hline
+                        2001 & 41828.24 \\
+                        2005 & 43895.55 \\
+                        2008 & 49347.78 \\
+                        2013 & 52324.04 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Average Number of Employees in each State}
+                    \label{tab:7}
+                \end{table}
             \end{center}
 
         Interestingly, we see the largest increase in the average number of federal employees between the beginning of Bush's second term and the inauguration of Obama, despite the Republican's support for a smaller government. Also, Obama grows the government more in his first term than Bush did in his first term. I will have to explore these numbers more to see which agencies specifically were recieving additional employees.
 
         \subsubsection{Age}
-        
+        The most common employee ages for each of the presidents's terms can be seen in Table \ref{tab:8}.
+
+            \begin{center}
+                \begin{table}
+                    \centering
+                    \begin{tabular}{ |c|c| }
+                        \hline
+                        Year & Mode \\
+                        \hline
+                        2001 & 45-49 \\
+                        2005 & 50-54 \\
+                        2009 & 50-54 \\
+                        2013 & 50-54 \\
+                        \hline
+                    \end{tabular}
+                    \caption{Most Common Age Intervals by Year}
+                    \label{tab:8}
+                \end{table}
+            \end{center}
+
+        The most common age increases slightly under Bush. This is representative of an aging population of employees.
 
         \subsubsection{Education}
+
 
         \subsubsection{LOS}
 
@@ -333,6 +390,17 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
         \subsubsection{NSFTP}
 
     \subsection{Data Visualization}
+
+        \subsubsection{Agency}
+
+        \subsubsection{Age}
+        I will now look at histograms for the number of employees in each age interval for my selected years. See Figure \ref{agehistograms}. With the four plots, we can watch as employees age. Namely, we see employees aged 50-54 entering the 55-59 interval between years 2001 and 2005. We can also see a hiring surge of younger employees in Obama's first term as a negative slant in the 2013 bow plot. Lastly, we can see that older employees are choosing to retire at later ages by the increase in size of the bars for the age intervals 60-64, 65-69, and 70-74.
+
+        \subsubsection{Education}
+
+        \subsubsection{LOS}
+
+        \subsubsection{Pay}
 
     \subsection{Relationships}
 
@@ -353,6 +421,14 @@ With the data set cleaned, I can now begin analysis. We will start with simple d
         \includegraphics[scale=0.3]{./images/employment-by-state-2001-2013.png}
         \caption{Number of Federal Employees in Continental United States}
         \label{employmentheatmap}
+    \end{figure}
+\end{center}
+
+\begin{center}
+    \begin{figure}
+        \includegraphics[scale=0.3]{./images/histogram-ages-2001-2013.pdf}
+        \caption{Number of Employees in each Age Interval}
+        \label{agehistograms}
     \end{figure}
 \end{center}
 
