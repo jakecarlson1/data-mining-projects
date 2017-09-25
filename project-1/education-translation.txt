@@ -1,0 +1,22 @@
+01&NO FORMAL EDUCATION OR SOME ELEMENTARY SCHOOL - DID NOT COMPLETE           
+02&ELEMENTARY SCHOOL COMPLETED - NO HIGH SCHOOL                               
+03&SOME HIGH SCHOOL - DID NOT COMPLETE                                        
+04&HIGH SCHOOL GRADUATE OR CERTIFICATE OF EQUIVALENCY                         
+05&TERMINAL OCCUPATIONAL PROGRAM - DID NOT COMPLETE                           
+06&TERMINAL OCCUPATIONAL PROGRAM - CERTIFICATE OF COMPLETION, DIPLOMA OR EQUIV
+07&SOME COLLEGE - LESS THAN ONE YEAR                                          
+08&ONE YEAR COLLEGE                                                           
+09&TWO YEARS COLLEGE                                                          
+10&ASSOCIATE DEGREE                                                           
+11&THREE YEARS COLLEGE                                                        
+12&FOUR YEARS COLLEGE                                                         
+13&BACHELOR'S DEGREE                                                          
+14&POST-BACHELOR'S                                                            
+15&FIRST PROFESSIONAL                                                         
+16&POST-FIRST PROFESSIONAL                                                    
+17&MASTER'S DEGREE                                                            
+18&POST-MASTER'S                                                              
+19&SIXTH-YEAR DEGREE                                                          
+20&POST-SIXTH YEAR                                                            
+21&DOCTORATE DEGREE                                                           
+22&POST-DOCTORATE   

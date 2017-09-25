@@ -297,10 +297,10 @@ mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 ## do it again for education ##
 # plot histograms for the four years
 par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
-barplot(table(df_2001$Education), main = "Education of Employees 2001")
-barplot(table(df_2005$Education), main = "Education of Employees 2005")
-barplot(table(df_2009$Education), main = "Education of Employees 2009")
-barplot(table(df_2013$Education), main = "Education of Employees 2013")
+barplot(table(df_2001$Education), main = "Education of Employees 2001", las = 2)
+barplot(table(df_2005$Education), main = "Education of Employees 2005", las = 2)
+barplot(table(df_2009$Education), main = "Education of Employees 2009", las = 2)
+barplot(table(df_2013$Education), main = "Education of Employees 2013", las = 2)
 mtext(text = "Education", side = 1, line = 0, outer = TRUE)
 mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 
@@ -335,7 +335,7 @@ barplot(table(df_2001$LOS), main = "LOS of Employees 2001", las = 2)
 barplot(table(df_2005$LOS), main = "LOS of Employees 2005", las = 2)
 barplot(table(df_2009$LOS), main = "LOS of Employees 2009", las = 2)
 barplot(table(df_2013$LOS), main = "LOS of Employees 2013", las = 2)
-mtext(text = "Length of Service", side = 1, line = 0, outer = TRUE)
+mtext(text = "Length of Service (years)", side = 1, line = 0, outer = TRUE)
 mtext(text = "Number of Employees", side = 2, line = 0, outer = TRUE)
 
 
@@ -373,6 +373,126 @@ df_2001_super <- data.frame(table(df_2001$SupervisoryStatus))
 df_2005_super <- data.frame(table(df_2005$SupervisoryStatus))
 df_2009_super <- data.frame(table(df_2009$SupervisoryStatus))
 df_2013_super <- data.frame(table(df_2013$SupervisoryStatus))
+
+
+## density plot pay ##
+# get densities
+d_2001 <- density(df_2001$Pay)
+d_2005 <- density(df_2005$Pay)
+d_2009 <- density(df_2009$Pay)
+d_2013 <- density(df_2013$Pay)
+
+# plot
+par(mfrow = c(2,2), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(d_2001, xlim = c(0,450000), main = "Pay Distribution 2001", ylab = "")
+plot(d_2005, xlim = c(0,450000), main = "Pay Distribution 2005", ylab = "")
+plot(d_2009, xlim = c(0,450000), main = "Pay Distribution 2009", ylab = "")
+plot(d_2013, xlim = c(0,450000), main = "Pay Distribution 2013", ylab = "")
+mtext(text = "Pay USD", side = 1, line = 0, outer = TRUE)
+mtext(text = "Density", side = 2, line = 0, outer = TRUE)
+
+# get peaks
+d_2001$x[which(d_2001$y == max(d_2001$y))]
+d_2005$x[which(d_2005$y == max(d_2005$y))]
+d_2009$x[which(d_2009$y == max(d_2009$y))]
+d_2013$x[which(d_2013$y == max(d_2013$y))]
+
+
+## Age LOS correlation ##
+par(mfrow = c(2,1), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(df_2005$LOS~df_2005$Age, main = "Length of Service vs. Age 2005",
+     ylab = "", xlab = "", las = 2)
+plot(df_2013$LOS~df_2013$Age, main = "Length of Service vs. Age 2013",
+     ylab = "", xlab = "", las = 2)
+mtext(text = "Age (years)", side = 1, line = 0, outer = TRUE)
+mtext(text = "Length of Service (years)", side = 2, line = 0, outer = TRUE)
+
+df_2005$Age <- factor(df_2005$Age, ordered = TRUE, levels = levels(df_2005$Age))
+df_2013$Age <- factor(df_2013$Age, ordered = TRUE, levels = levels(df_2013$Age))
+
+
+## Age Pay correlation ##
+par(mfrow = c(2,1), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(df_2005$Pay~df_2005$Age, main = "Pay vs. Age 2005",
+     ylab = "", xlab = "", las = 2)
+plot(df_2013$Pay~df_2013$Age, main = "Pay vs. Age 2013",
+     ylab = "", xlab = "", las = 2)
+mtext(text = "Age (years)", side = 1, line = 0, outer = TRUE)
+mtext(text = "Pay (USD)", side = 2, line = 0, outer = TRUE)
+
+
+## average pay by state ##
+state_trans <- read.csv('./state-trans.txt', header = TRUE)
+states <- map_data('state')
+
+# prepend zero to states with number < 10
+state_trans$Num <- sapply(state_trans$Num, FUN = function(x) formatC(x, width = 2, format = "d", flag = "0"))
+
+mean_pay_2005 <- state_trans
+mean_pay_state_2005 <- aggregate(Pay ~ sapply(df_2005$Station, FUN = function(x) substring(x, 1,2)), df_2005, mean)
+mean_pay_state_2005$region <- tolower(state_trans$State[match(mean_pay_state_2005[,1], state_trans$Num)])
+df_pay_state_2005 <- merge(states, mean_pay_state_2005, by = 'region', all.x = TRUE)
+
+mean_pay_2013 <- state_trans
+mean_pay_state_2013 <- aggregate(Pay ~ sapply(df_2013$Station, FUN = function(x) substring(x, 1,2)), df_2013, mean)
+mean_pay_state_2013$region <- tolower(state_trans$State[match(mean_pay_state_2013[,1], state_trans$Num)])
+df_pay_state_2013 <- merge(states, mean_pay_state_2013, by = 'region', all.x = TRUE)
+
+# plot 2005
+map_2005 <- ggplot() +
+    geom_polygon(data = df_pay_state_2005, aes(x = df_pay_state_2005$long, y = df_pay_state_2005$lat,
+                                            group = df_pay_state_2005$group,
+                                            fill = df_pay_state_2005$Pay),
+                 colour="white") +
+    scale_fill_gradientn(colours = c("green", "darkgreen"), limits = range(40000, 120000)) +
+    theme_bw() + labs(fill = "Mean Annual Salary",
+                      title = "Mean Pay by State, 2005", x="", y="") +
+    scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
+    theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
+
+# plot 2013
+map_2013 <- ggplot() +
+    geom_polygon(data = df_pay_state_2013, aes(x = df_pay_state_2013$long, y = df_pay_state_2013$lat,
+                                               group = df_pay_state_2013$group,
+                                               fill = df_pay_state_2013$Pay),
+                 colour="white") +
+    scale_fill_gradientn(colours = c("green", "darkgreen"), limits = range(40000, 120000)) +
+    theme_bw() + labs(fill = "Mean Annual Salary",
+                      title = "Mean Pay by State, 2013", x="", y="") +
+    scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) +
+    theme(panel.border = element_blank(), plot.title = element_text(hjust = 0.5))
+
+grid.arrange(map_2005, map_2013, ncol = 2)
+
+
+## pay by education ##
+par(mfrow = c(2,1), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(df_2005$Pay~df_2005$Education, main = "Pay vs. Education 2005",
+     ylab = "", xlab = "", las = 2)
+plot(df_2013$Pay~df_2013$Education, main = "Pay vs. Education 2013",
+     ylab = "", xlab = "", las = 2)
+mtext(text = "Education", side = 1, line = 0, outer = TRUE)
+mtext(text = "Pay (USD)", side = 2, line = 0, outer = TRUE)
+
+
+## pay by supervisory status ##
+par(mfrow = c(2,1), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(df_2005$Pay~df_2005$SupervisoryStatus, main = "Pay vs. Supervisory Status 2005",
+     ylab = "", xlab = "", las = 2)
+plot(df_2013$Pay~df_2013$SupervisoryStatus, main = "Pay vs. Supervisory Status 2013",
+     ylab = "", xlab = "", las = 2)
+mtext(text = "Supervisory Status", side = 1, line = 0, outer = TRUE)
+mtext(text = "Pay (USD)", side = 2, line = 0, outer = TRUE)
+
+
+## edu by supervisory status ##
+par(mfrow = c(2,1), oma = c(2,2,1,1), mar = c(4,4,2,1))
+plot(df_2005$Education~df_2005$SupervisoryStatus, main = "Education vs. Supervisory Status 2005",
+     ylab = "", xlab = "", las = 2)
+plot(df_2013$Education~df_2013$SupervisoryStatus, main = "Education vs. Supervisory Status 2013",
+     ylab = "", xlab = "", las = 2)
+mtext(text = "Supervisory Status", side = 1, line = 0, outer = TRUE)
+mtext(text = "Education", side = 2, line = 0, outer = TRUE)
 
 
 # returns class of each column
