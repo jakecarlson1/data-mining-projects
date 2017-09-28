@@ -2,6 +2,7 @@
 data/
 new-data/
 clean-data/
+*/*-data.zip
 
 # R history and data
 */.Rdata
