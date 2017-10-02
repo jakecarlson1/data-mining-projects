@@ -80,6 +80,10 @@ make_cleaner <- function(df, agency_subset = c()) {
     df$Pay <- cut(df$Pay,
                   breaks = c(0, 50000, 75000, 100000 ,Inf),
                   labels = c("<50k", "50-75k", "75k-100k", ">100k"))
+    df$Pay <- factor(df$Pay, ordered = TRUE, levels = levels(df$Pay))
+
+    # drop NA Pay
+    df <- df[!is.na(df$Pay),]
 
     # make age an integer (take middle of range)
     df$Age <- sapply(df$Age, FUN = function(x)
@@ -89,6 +93,7 @@ make_cleaner <- function(df, agency_subset = c()) {
     return(df)
 } # end make_cleaner
 
+# two character identifier for the agency
 agency_sub = c("HS")
 
 df_hs_2005 <- make_cleaner(df_2005, agency_sub)
