@@ -75,7 +75,6 @@ make_cleaner <- function(df, agency_subset = c()) {
     # create state name column
     df$region <- tolower(state_trans$State[match(df$Station, state_trans$Num)])
 
-
     # make pay ordinal (cut)
     df$Pay <- cut(df$Pay,
                   breaks = c(0, 50000, 75000, 100000, Inf),
