@@ -78,7 +78,7 @@ make_cleaner <- function(df, agency_subset = c()) {
 
     # make pay ordinal (cut)
     df$Pay <- cut(df$Pay,
-                  breaks = c(0, 50000, 75000, 100000 ,Inf),
+                  breaks = c(0, 50000, 75000, 100000, Inf),
                   labels = c("<50k", "50-75k", "75k-100k", ">100k"))
     df$Pay <- factor(df$Pay, ordered = TRUE, levels = levels(df$Pay))
 
@@ -90,6 +90,16 @@ make_cleaner <- function(df, agency_subset = c()) {
         if(x == "75+") 75
         else (as.integer(substring(x, 1,2)) + as.integer(substring(x, 4,5)))/2)
 
+    # make Education an integer to improve training speed
+    df$Education <- as.numeric(as.character(df$Education))
+
+    # make LOS a number (middle of range) to improve training speed
+    df$LOS <- sapply(df$LOS, FUN = function(x)
+        if(x == "< 1") 1
+        else if(x == "35+") 35
+        else floor((as.integer(strsplit(as.character(x), '-')[[1]][1]) +
+                    as.integer(strsplit(as.character(x), '-')[[1]][2]))/2))
+
     return(df)
 } # end make_cleaner
 
@@ -98,4 +108,9 @@ agency_sub = c("HS")
 
 df_hs_2005 <- make_cleaner(df_2005, agency_sub)
 
+library(rpart)
+model <- rpart(Pay ~ Age + Education + LOS, data = df_hs_2005)
+model
 
+library('rpart.plot')
+rpart.plot(model, extra = 2, under = TRUE, varlen=0, faclen=0)
