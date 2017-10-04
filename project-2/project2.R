@@ -1,15 +1,15 @@
 setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-2")
 data_dir <- "../clean-data/"
 
-# read four years
-df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""),
-                    header = TRUE, sep = ",")
-df_2005 <- read.csv(file = paste(data_dir, '2005-clean.csv', sep=""),
-                    header = TRUE, sep = ",")
-df_2009 <- read.csv(file = paste(data_dir, '2009-clean.csv', sep=""),
-                    header = TRUE, sep = ",")
-df_2013 <- read.csv(file = paste(data_dir, '2013-clean.csv', sep=""),
-                    header = TRUE, sep = ",")
+# # read four years
+# df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""),
+#                     header = TRUE, sep = ",")
+# df_2005 <- read.csv(file = paste(data_dir, '2005-clean.csv', sep=""),
+#                     header = TRUE, sep = ",")
+# df_2009 <- read.csv(file = paste(data_dir, '2009-clean.csv', sep=""),
+#                     header = TRUE, sep = ",")
+# df_2013 <- read.csv(file = paste(data_dir, '2013-clean.csv', sep=""),
+#                     header = TRUE, sep = ",")
 
 # prepare data for classification, subsets data to agency_subset if provided
 make_cleaner <- function(df, agency_subset = c()) {
@@ -101,6 +101,62 @@ make_cleaner <- function(df, agency_subset = c()) {
 
     return(df)
 } # end make_cleaner
+
+# that function is nice, but lets restart
+replace_na <- function(file_name, data_d) {
+    dat_raw <- readLines(paste(data_d, file_name, sep=""))
+
+    header_file <- paste(data_d, "headers.csv", sep = "")
+    agency_file <- paste(data_d, "SCTFILE.TXT", sep = "")
+    dat_header <- read.csv(header_file, header = TRUE)
+    agency_trans <- readLines(agency_file)
+    agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
+    agency_name <- trimws(sapply(agency_trans, FUN = function(x)
+        substring(x, 36,75)))
+    agency_trans_table <- data.frame(agency_ID = agency_ID,
+                                     agency_name = agency_name)
+
+    # apply headers
+    df <- t(sapply(dat_raw, FUN = function(x)
+        trimws(substring(x, dat_header[,2], dat_header[,3]))))
+    dimnames(df) <- NULL
+    df <- as.data.frame(df)
+    colnames(df) <- dat_header[,1]
+
+    # remove columns
+    to_save <- c("Agency","Station","Age","Education","LOS","Pay",
+                 "SupervisoryStatus")
+    df <-df[,to_save]
+
+    df$Station <- replace(df$Station, df$Station == "#########" |
+                          df$Station == "*********", NA)
+    df$Age <- replace(df$Age, df$Age == "UNSP", NA)
+    df$Education <- replace(df$Education, df$Education == "" |
+                            df$Education == "*" | df$Education == "**", NA)
+    df$LOS <- replace(df$LOS, df$LOS == "UNSP", NA)
+    df$SupervisoryStatus <- replace(df$SupervisoryStatus,
+                                    df$SupervisoryStatus == "" |
+                                    df$SupervisoryStatus == "*" |
+                                    df$SupervisoryStatus == "**", NA)
+
+    # make numeric fields numeric
+    df$Pay <- as.numeric(as.character(df$Pay))
+
+    # impute Station, Education, LOS, SupervisoryStatus
+    df$Station <- sapply(df$Station, FUN = function(x)
+        as.integer(substring(x, 1,2)))
+
+    # add agency name
+    m <- match(df$Agency, agency_trans_table$agency_ID)
+    df$AgencyName <-  agency_trans_table$agency_name[m]
+
+    return(df)
+}
+
+df <- replace_na('Status_Non_DoD_2001_03.txt', '../data/')
+
+# need to come up with an imputation method
+# imputing Station: 0.697 -> 0.951 entities saved
 
 # two character identifier for the agency
 agency_sub = c("HS")
