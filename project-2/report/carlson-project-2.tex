@@ -43,7 +43,7 @@ I will use a variety of classification models, including Decision Trees, K-Neare
 \section{Data Preparation}
 To prepare my data for classification, I reprocess the raw payroll data. I start by removing columns that I don't plan on using for classification. The attributes I save are given in Table \ref{tab:1}. I then replace unknown values with NA, make Pay a numeric attribute, pull out the encoding for what state the employee works in from Station, and create a column that holds the whole agency name for each employee. I join the four quarters for each of the four years I'm looking at into one data frame, and save this frame to disk.
 \par
-When I load these data frames, I run some additional preparation to make sure the data is ready for classification and make sure the models will train as efficiently as possible. I create a region column which translates the state encoding in Station to the actual name of the state. I convert Pay to an ordinal variable from a continuous variable by descretizing into four classes. The Pay groups are given in Table \ref{tab:2}. I then convert the ordinal Age variable to a ratio variable by taking the middle of the age range for each occurance The Age translation is given in Table \ref{tab:3}. I convert Education to an integer to improve the training speed with this ordinal variable. Next I convert the ordinal Length of Service variable to a ratio varible by taking the middle of the time span for each occurance. The translation for LOS is given in Table \ref{tab:4}. My preparation function also allows for a subset of agencies to be choosen from the saved data files. The last step in the preparation function is converting the agencies to a one-hot encoded representation. This creates a new column for each agency which has a 1 in it if the employee works at that agency, and a 0 if the employee does not work at that agency.
+When I load these data frames, I run some additional preparation to make sure the data is ready for classification and make sure the models will train as efficiently as possible. I create a region column which translates the state encoding in Station to the actual name of the state. I convert Pay to an ordinal variable from a continuous variable by descretizing into six classes. The Pay groups are given in Table \ref{tab:2}. I then convert the ordinal Age variable to a ratio variable by taking the middle of the age range for each occurance The Age translation is given in Table \ref{tab:3}. I convert Education to an integer to improve the training speed with this ordinal variable. Next I convert the ordinal Length of Service variable to a ratio varible by taking the middle of the time span for each occurance. The translation for LOS is given in Table \ref{tab:4}. My preparation function also allows for a subset of agencies to be choosen from the saved data files. The last step in the preparation function is converting the agencies to a one-hot encoded representation. This creates a new column for each agency which has a 1 in it if the employee works at that agency, and a 0 if the employee does not work at that agency.
 \par
 When I go to create a model based on a subset of my choosen columns, I will throw out any entries that are incomplete. The count of the number of records that are complete, as well as the percentage of records that are complete for each year are given in Table \ref{tab:5}.
 
@@ -76,10 +76,12 @@ When I go to create a model based on a subset of my choosen columns, I will thro
                 \hline
                 Pay Ranges \\
                 \hline
-                $<$50k \\
-                50-75k \\
-                75-100k \\
-                $>$100k \\
+                $<$30k \\
+                30-50k \\
+                50-70k \\
+                70-90k \\
+                90-110k \\
+                $>$110k \\
                 \hline
             \end{tabular}
             \caption{The Pay Ranges Used To Descretize Pay}

@@ -1,16 +1,6 @@
 setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-2")
 data_dir <- "../clean-data/"
 
-# # read four years
-# df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""),
-#                     header = TRUE, sep = ",")
-# df_2005 <- read.csv(file = paste(data_dir, '2005-clean.csv', sep=""),
-#                     header = TRUE, sep = ",")
-# df_2009 <- read.csv(file = paste(data_dir, '2009-clean.csv', sep=""),
-#                     header = TRUE, sep = ",")
-# df_2013 <- read.csv(file = paste(data_dir, '2013-clean.csv', sep=""),
-#                     header = TRUE, sep = ",")
-
 # prepare data for classification, subsets data to agency_subset if provided
 make_cleaner <- function(df, agency_subset = c()) {
     # apply subset if agency_subset provided
@@ -200,8 +190,9 @@ prep_attributes <- function(df, agency_subset = c()) {
 
     # make pay ordinal (cut)
     df$Pay <- cut(df$Pay,
-                  breaks = c(0, 50000, 75000, 100000, Inf),
-                  labels = c("<50k", "50-75k", "75k-100k", ">100k")) # mess with this
+                  breaks = c(0, 30000, 50000, 70000, 90000, 110000, Inf),
+                  labels = c("<30k", "30-50k", "50-70k", "70-90k", "90k-110k",
+                             ">110k"))
     df$Pay <- factor(df$Pay, ordered = TRUE, levels = levels(df$Pay))
 
     # drop NA Pay
@@ -232,7 +223,6 @@ prep_attributes <- function(df, agency_subset = c()) {
 
 # load clean data and run prep_attributes
 data_dir <- "../clean-data/"
-agency_subset <- c()
 
 # # read four years
 df_2001 <- read.csv(file = paste(data_dir, '2001-clean.csv', sep=""),
@@ -244,10 +234,10 @@ df_2009 <- read.csv(file = paste(data_dir, '2009-clean.csv', sep=""),
 df_2013 <- read.csv(file = paste(data_dir, '2013-clean.csv', sep=""),
                     header = TRUE, sep = ",")
 
-df_2001 <- prep_attributes(df_2001, agency_subset)
-df_2005 <- prep_attributes(df_2005, agency_subset)
-df_2009 <- prep_attributes(df_2009, agency_subset)
-df_2013 <- prep_attributes(df_2013, agency_subset)
+df_2001 <- prep_attributes(df_2001)
+df_2005 <- prep_attributes(df_2005)
+df_2009 <- prep_attributes(df_2009)
+df_2013 <- prep_attributes(df_2013)
 
 # count complete cases for each frame
 count_complete <- function(df) {
@@ -265,6 +255,7 @@ save(df_2001, df_2005, df_2009, df_2013,
      file = "../clean-data/persisted-full-frames.RData")
 
 # load from workspace file
+setwd("~/Desktop/School/CSE/CSE_5331/projects.nosync/project-2")
 load("../clean-data/persisted-full-frames.RData")
 
 # do agency subsetting
