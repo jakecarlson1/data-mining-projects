@@ -17,9 +17,28 @@ Classification on federal payroll data.
 \newpage
 
 \section{Business Understanding}
-Goals, scope, related attributes.
+In this project, I will again be analyzing the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. I will continue my analysis of the presidency of George W. Bush and Barack Obama by creating classification models based on the payroll data. Based on attributes of the employees, I will be trying to predict class labels such as the annual pay of the employee, what their level of education is, how long they have been a federal employee, what their supervisory status is, and where they are located. The various models will provide insight into how relevant each attribute is as predicitng the class label. For example, the heirarchy of splits in decision trees indicate what attributes are most relevant when determining the class label. By looking at how these models differ between the presidents, and how the ranking of attributes changes, we will gain insight into how each administration restructured the composition of the federal government.
+\par
+I will use a variety of classification models, including Decision Trees, K-Nearest Neighbors, Artificial Neural Networks, and Random Forests. I will compare the performace of these models to each other to see what models have the best performance in terms of both accuracy and the time required to perform classification on test data.
 
-What could be done with these models?
+    \subsection{Annual Pay}
+    By predicting Pay, we will see what attributes correspond to a higher pay rate. This would be useful for employees so that they can see what attributes they should look to change about themselves if they are looking to get a pay raise. For example, if Education has a strong relationship with higher pay rates, employees should consider pursuing higher education in order to recieve a raise.
+
+    \subsection{Education Level}
+    By predicting Education, we will be able to see what attributes are most related with having a higher or lower education level. If a particular agency is in need additional specialized labor, they could offer a subset of their employees financial aid to pursue higher education. This would allow that agency to promote from within, rather than looking for new employees.
+    \par
+    From Project 1 we determined that the vast majority of employees had either a high school diploma or a Bachelor's degree. This class imbalance will need to be addressed when creating classification models.\cite{proj1}
+
+    \subsection{Length of Service}
+    By predicting Length of Service, we will see what factors encourage employees to continue their work at the federal government. By examining how the most imporant attributes change between administrations, we will get an idea of what each administration favored in their employees. We will also see what types of employees prefered to continue their employement in response to the leadership change. Useful why??
+
+    \subsection{Supervisory Status}
+    By seeing what factors affect Supervisory Status, we will see what the most common attributes are for members of leadership within an agency. This could be used by each agency to see if their leadership is biased to employees with certian attributes. With this information, agencies could work to diversify their leadership and potentially improve the operations of their agency and improve the propensity of potential employees to apply for employment from that agency. A more diverse applicant pool would allow the agency to restructure more efficiently under new leadership.
+
+    \subsection{Location}
+    By modeling where an employee is located based on their attributes, we can see what the demographics are in each state. By breaking up this model by agency, we can get an idea of how the agency is organized at a national level. We may see more supervisors in the Washington D.C. and Maryland area. With this model, an agency could more easily visualize their structure and, if a certain state is struggling to meet operational requirements, allocate additional supervisors from a state with a surplus to the state that is struggling.
+    \par
+    Because larger states have more federal employees, we will have a class imbalance where large states are over-represented.
 
 \section{Data Preparation}
 Cleaning, features removed/created.
@@ -31,5 +50,14 @@ What are the differences across time and between agencies?
 
 \section{Evaluation and Deployment}
 Are these models useful for solving the problems outlined in the business understanding?
+
+\begin{thebibliography}{10}
+    \bibitem{proj1}
+    Jake Carlson
+    \textit{CSE 5331 - Data Mining Project 1}
+    \texttt{https://github.com/jakecarlson1/data-mining-projects/blob/master/}
+    \texttt{project-1/report/carlson-project-1.pdf}
+
+\end{thebibliography}
 
 \end{document}
