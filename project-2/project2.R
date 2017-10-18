@@ -141,20 +141,29 @@ replace_na <- function(file_name, dat_header, agency_trans_table) {
 # save cleaned data frames to csvs by year
 wash_and_dry <- function(data_d, out_data_d, years) {
     data_files <- list.files(path = data_d)
-    non_dod_files <- paste(data_d, grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt", data_files, perl = TRUE, value = TRUE), sep = "")
+    non_dod_files <- paste(data_d,
+                           grep("Status_Non_DoD_20[01][0-9]_[01][3692].txt",
+                                data_files, perl = TRUE, value = TRUE),
+                           sep = "")
 
     header_file <- paste(data_d, "headers.csv", sep = "")
     agency_file <- paste(data_d, "SCTFILE.TXT", sep = "")
     dat_header <- read.csv(header_file, header = TRUE)
     agency_trans <- readLines(agency_file)
     agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,6))
-    agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
-    agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
+    agency_name <- trimws(sapply(agency_trans,
+                                 FUN = function(x) substring(x, 36,75)))
+    agency_trans_table <- data.frame(agency_ID = agency_ID,
+                                     agency_name = agency_name)
 
     for(y in years) {
-        year_files <- grep(paste("Status_Non_DoD_", toString(y), "_[01][3692].txt", sep = ""), non_dod_files, perl = TRUE, value = TRUE)
-        df <- do.call(rbind, lapply(year_files, dat_header, agency_trans_table, FUN = replace_na))
-        write.csv(df, file = paste(out_data_d, toString(y), "-clean.csv", sep = ""))
+        year_files <- grep(paste("Status_Non_DoD_", toString(y),
+                                 "_[01][3692].txt", sep = ""),
+                           non_dod_files, perl = TRUE, value = TRUE)
+        df <- do.call(rbind, lapply(year_files, dat_header, agency_trans_table,
+                                    FUN = replace_na))
+        write.csv(df, file = paste(out_data_d, toString(y), "-clean.csv",
+                                   sep = ""))
     }
 }
 
@@ -270,22 +279,117 @@ subset_agencies <- function(df, agency_subset = c()) {
     return(df)
 }
 
-agency_subset <- c("HS")
+library(caret)
+library(FSelector)
+library('rpart.plot')
+# pipeline to compare models
+compare_models <- function(dat, label, vars, m1, c1, m2, c2) {
+    f <- as.simple.formula(vars, label)
+    fit1 <- train(f, data = dat, method = m1, trControl = c1,
+                  tuneLength = 5)
+    print(fit1$finalModel)
+    fit2 <- train(f, data = dat, method = m2, trControl = c2,
+                  tuneLength = 2)
+    print(fit2$finalModel)
+    resamps <- resamples(list(m1 = fit1, m2 = fit2))
+    print(summary(resamps))
+    return(list("m1fit" = fit1, "m2fit" = fit2))
+}
 
-df_hs_2001 <- subset_agencies(df_2001, agency_subset)
+
+agency_subset <- c("DJ")
+
+df_dj_2005 <- subset_agencies(df_2005, agency_subset)
+df_dj_2013 <- subset_agencies(df_2013, agency_subset)
 
 # remove incomplete cases, ignoring columns that wont be used for that model
+df_dj_2005 <- df_dj_2005[complete.cases(df_dj_2005),]
+df_dj_2013 <- df_dj_2013[complete.cases(df_dj_2013),]
 
 
+# remove unwanted columns
+variables <- c("Age","Education","LOS",
+               "Category","SupervisoryStatus")
+
+df_dj_t_2005 <- df_dj_2005[,c(variables, "Pay")]
+df_dj_t_2013 <- df_dj_2013[,c(variables, "Pay")]
 
 
+## Pay prediction ##
 
+# feature selection
+consistency(Pay ~ ., data = df_dj_t_2005)
+cfs(Pay ~ ., data = df_dj_t_2005)
+
+# decision tree control
+rpart_c <- trainControl(method = "cv", number = 10)
+# random forest control
+rf_c <- trainControl(method = "cv",
+                       indexOut = createFolds(df_dj_2005$Pay, k = 10))
+
+# 2005
+fitted_models <- compare_models(df_dj_t_2005, "Pay", c("Age", "Education", "Category"),
+                                "rpart", rpart_c, "rf", rf_c)
+varImp(fitted_models$m1fit$finalModel)
+varImp(fitted_models$m2fit$finalModel)
+rpart.plot(fitted_models$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
+
+# 2013
+fitted_models <- compare_models(df_dj_t_2013, "Pay", c("Age", "Education", "Category"),
+                                "rpart", rpart_c, "rf", rf_c)
+varImp(fitted_models$m1fit$finalModel)
+varImp(fitted_models$m2fit$finalModel)
+rpart.plot(fitted_models$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
+
+
+## Education prediction ##
+
+# apply education classes
+edu_breaks <- function(df) {
+    df$Education <- cut(df$Education,
+              breaks = c(0, 2, 6, 13, 20, Inf),
+              labels = c("Elm","HS", "Col", "Grad", "Doc"))
+    return(df)
+}
+
+df_dj_t_2005 <- edu_breaks(df_dj_t_2005)
+df_dj_t_2013 <- edu_breaks(df_dj_t_2013)
+
+consistency(Education ~ ., data = df_dj_t_2005)
+cfs(Education ~ ., data = df_dj_t_2005)
+
+# https://stackoverflow.com/questions/24142576/one-hot-encoding-in-r-categorical-to-dummy-variables
+# encode pay dummy variables as strings
+dj_edu_2005 <- with(df_dj_t_2005, data.frame(
+    model.matrix(~Pay-1, df_dj_t_2005), Age, Education, Category))
+dj_edu_2013 <- with(df_dj_t_2013, data.frame(
+    model.matrix(~Pay-1, df_dj_t_2013), Age, Education, Category))
+
+# 2005
+fitted_models_2005 <- compare_models(dj_edu_2005, "Education", c("Age",
+                                    "Category", "Pay.30k", "Pay30.50k",
+                                    "Pay50.70k", "Pay70.90k", "Pay90k.110k",
+                                    "Pay.110k"), "rpart", rpart_c, "rf", rf_c)
+varImp(fitted_models_2005$m1fit$finalModel)
+varImp(fitted_models_2005$m2fit$finalModel)
+rpart.plot(fitted_models_2005$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
+
+# 2013
+fitted_models_2013 <- compare_models(dj_edu_2013, "Education", c("Age",
+                                     "Category", "Pay.30k", "Pay30.50k",
+                                     "Pay50.70k", "Pay70.90k", "Pay90k.110k",
+                                     "Pay.110k"), "rpart", rpart_c, "rf", rf_c)
+varImp(fitted_models_2013$m1fit$finalModel)
+varImp(fitted_models_2013$m2fit$finalModel)
+rpart.plot(fitted_models_2013$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
 
 
 
 library(rpart)
-model <- rpart(Pay ~ Age + Education + LOS, data = df_hs_2005)
+model <- rpart(Pay ~ Age + Education + LOS + Station + SupervisoryStatus, data = df_dj_2005)
 model
+
+
 
 library('rpart.plot')
 rpart.plot(model, extra = 2, under = TRUE, varlen=0, faclen=0)
