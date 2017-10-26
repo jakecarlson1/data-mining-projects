@@ -32,16 +32,19 @@ I will use a variety of classification models, including Decision Trees, K-Neare
     \par
     From Project 1 we determined that the vast majority of employees had either a high school diploma or a Bachelor's degree. This class imbalance will need to be addressed when creating classification models.\cite{proj1}
 
-    \subsection{Length of Service}
-    By predicting Length of Service, we will see what factors encourage employees to continue their work at the federal government. By examining how the most imporant attributes change between administrations, we will get an idea of what each administration favored in their employees. We will also see what types of employees prefered to continue their employement in response to the leadership change. Useful why??
+    \subsection{Career Planning}
+    Finally, I will try to build the most accurrate model possible at predicting pay. I will use Age, Education, Station, SupervisoryStatus, and Category to train two models. Potentially, people could create new records for themselves and pass them through this model to see how much they would be paid if they decided to work at an agency in a particular state. I will create a record for myself and see what I would be able to expect if I got a job in the federal government.
 
-    \subsection{Supervisory Status}
-    By seeing what factors affect Supervisory Status, we will see what the most common attributes are for members of leadership within an agency. This could be used by each agency to see if their leadership is biased to employees with certian attributes. With this information, agencies could work to diversify their leadership and potentially improve the operations of their agency and improve the propensity of potential employees to apply for employment from that agency. A more diverse applicant pool would allow the agency to restructure more efficiently under new leadership.
-
-    \subsection{Location}
-    By modeling where an employee is located based on their attributes, we can see what the demographics are in each state. By breaking up this model by agency, we can get an idea of how the agency is organized at a national level. We may see more supervisors in the Washington D.C. and Maryland area. With this model, an agency could more easily visualize their structure and, if a certain state is struggling to meet operational requirements, allocate additional supervisors from a state with a surplus to the state that is struggling.
-    \par
-    Because larger states have more federal employees, we will have a class imbalance where large states are over-represented.
+    % \subsection{Length of Service}
+    % By predicting Length of Service, we will see what factors encourage employees to continue their work at the federal government. By examining how the most imporant attributes change between administrations, we will get an idea of what each administration favored in their employees. We will also see what types of employees prefered to continue their employement in response to the leadership change. Useful why??
+    %
+    % \subsection{Supervisory Status}
+    % By seeing what factors affect Supervisory Status, we will see what the most common attributes are for members of leadership within an agency. This could be used by each agency to see if their leadership is biased to employees with certian attributes. With this information, agencies could work to diversify their leadership and potentially improve the operations of their agency and improve the propensity of potential employees to apply for employment from that agency. A more diverse applicant pool would allow the agency to restructure more efficiently under new leadership.
+    %
+    % \subsection{Location}
+    % By modeling where an employee is located based on their attributes, we can see what the demographics are in each state. By breaking up this model by agency, we can get an idea of how the agency is organized at a national level. We may see more supervisors in the Washington D.C. and Maryland area. With this model, an agency could more easily visualize their structure and, if a certain state is struggling to meet operational requirements, allocate additional supervisors from a state with a surplus to the state that is struggling.
+    % \par
+    % Because larger states have more federal employees, we will have a class imbalance where large states are over-represented.
 
 \section{Data Preparation}
 To prepare my data for classification, I reprocess the raw payroll data. I start by removing columns that I don't plan on using for classification. The attributes I save are given in Table \ref{tab:1}. I then replace unknown values with NA, make Pay a numeric attribute, pull out the encoding for what state the employee works in from Station, and create a column that holds the whole agency name for each employee. I join the four quarters for each of the four years I'm looking at into one data frame, and save this frame to disk.
@@ -169,12 +172,12 @@ The scale and range of all of the attributes in the final data set are given in 
                 \hline
                 Attribute & Scale & Range \\
                 \hline
-                Agency & Categorical & Unique four characters for each agency \\
-                Station & Categorical & 1-56, some values missing \\
+                Agency & Nominal & Unique four characters for each agency \\
+                Station & Nominal & 1-56, some values missing \\
                 Age & Ratio & 17-72 by 5, 75 \\
-                Education & Categorical & 1-22 \\
+                Education & Ordinal & Elm, HS, Col, Grad, Doc \\
                 LOS & Ratio & 1, 3, 7-32 by 5, 35 \\
-                Category & Categorical & P, A, T, C, O, B \\
+                Category & Nominal & P, A, T, C, O, B \\
                 Pay & Ordinal & $<$30k, 30-50k, 50-70k, 70-90k, 90-110k, $>$110k \\
                 SupervisoryStatus & Categorical & 2, 4, 5, 6, 7, 8 \\
                 \hline
@@ -276,7 +279,7 @@ Next I will begin creating models for the each of the cases outlined in the Busi
     \end{center}
 
     \subsection{Education Level}
-    I will model Education for the Department of Justice. The models for Pay showed that the Category and Education are the most relevant attributes for predicting the Pay of an employee. I would expect Category to be an important attribute in predicting Education. I will again use cfs and consistency to determine the most relevant attributes to use when training my models for Education. For this attribute, I will again compare random forests to decision trees. Consistency gives the most important attributes as Age, Length of Service, Category, and SupervisoryStatus. Cfs gives the most important attributes as Category, and Pay. I will use Age, Category, and Pay to build my models. It is important to note that neither of the years I have choosen have employees who reached Doctorate level studies.
+    I will model Education for the Department of Justice. The models for Pay showed that the Category and Education are the most relevant attributes for predicting the Pay of an employee. I would expect Category to be an important attribute in predicting Education. I will again use cfs and consistency to determine the most relevant attributes to use when training my models for Education. For this attribute, I will again compare random forests to decision trees. Consistency gives the most important attributes as Age, Length of Service, Category, and SupervisoryStatus. Cfs gives the most important attributes as Category, and Pay. I will use Age, Category, and Pay to build my models.
     \par
     The models had comparable accuracy and kappa scores to the scores in Table \ref{tab:7}. Again, the random forest consistently beat the decision tree with a maximum accuracy of 0.616 over 0.604 and a maximum kappa of 0.415 over 0.399. The most important attributes for 2005 and 2013 are given in Table \ref{tab:10}. I've also provided the decision tree structure for 2005 in Figure \ref{edudesctree2005} and 2013 in Figure \ref{edudesctree2013}.
     \par
@@ -321,11 +324,105 @@ Next I will begin creating models for the each of the cases outlined in the Busi
         \end{figure}
     \end{center}
 
-    \subsection{Length of Service}
+    \subsection{Career Planning}
+    Next I will compare the accuracy of linear support vector machines and artificial neural networks to see which model would be most useful for predicting the Pay of a potential new employee. If I were to work in the federal government, I would be most interested in working at NASA. For these models, I will train on the 2013 data for NASA based off of the attributes new employees would know about themselves. These attributes are Age, Education, Category, and the state they want to work in.
+    \par
+    To start this section I will train models on the raw data to see how well they do. I am not accounting for the Pay class imbalance at this point. The distribution of Pay for this data set is given in Table \ref{tab:11}. We see that neural networks out-perform support vector machines consistently. These are also much better scores than we saw for decision trees or random forests, although the data set has changed. The resulting scores are in Table \ref{tab:12}
+    \par
+    I will see if it is possible to boost these scores anymore by balancing the data sets. I will remove the $<$30k class because of how few instances there are, and I will sample 16,000 instances of the remaining classes. The accuracy and kappa scores for these classifiers are given in Table \ref{tab:13}. We see that balancing the data in this fashion produces lower accuracy scores. The maximum accuracy on balanced data for both neural networks and support vector machines are lower than the minimum accuracy on the unbalanced data.
+    \par
+    I will use the model with the highest accuracy to predict what my pay would be at NASA. I am planning on completing a Master's degree before entering the workforce, and I am looking for a professional role. The attributes of my record are given in Table \ref{tab:14}. I am open to working in both Texas and California, so I will create records for each of these circumstances and compare the outputs.
+    \par
+    My model predicts that I would make between \$90,000 and \$110,000 in both California and Texas.
 
-    \subsection{Supervisory Status}
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c| }
+                \hline
+                Pay & Count \\
+                \hline
+                $<$30k & 52 \\
+                30-50k & 1,809 \\
+                50-70k & 4,158 \\
+                70-90k & 8,743 \\
+                90-110k & 16,742 \\
+                $>$110k & 40,431 \\
+                \hline
+            \end{tabular}
+            \caption{Count for Each Pay Group at NASA in 2013}
+            \label{tab:11}
+        \end{table}
+    \end{center}
 
-    \subsection{Location}
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c|c|c|c|c|c| }
+                \hline
+                Accuracy \\
+                \hline
+                Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
+                SVMs & 0.6601880 & 0.6644062 & 0.6725758 & 0.6713937 & 0.6760624 & 0.6859645 & 0 \\
+                Neural Networks & 0.5637412 & 0.6704036 & 0.6762093 & 0.6678942 & 0.6879576 & 0.6941478 & 0 \\
+                \hline
+                Kappa \\
+                \hline
+                Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
+                SVMs & 0.4070017 & 0.4118411 & 0.4201859 & 0.4240386 & 0.4333163 & 0.4546614 & 0 \\
+                Neural Networks & 0.0000000 & 0.4182674 & 0.4355880 & 0.3938948 & 0.4567227 & 0.4630322 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{The Accuracy And Kappa Score for Support Vector Machines and Artificial Neural Networks}
+            \label{tab:12}
+        \end{table}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c|c|c|c|c|c| }
+                \hline
+                Accuracy \\
+                \hline
+                Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
+                SVMs & 0.5493379 & 0.5561194 & 0.5596496 & 0.5607548 & 0.5653801 & 0.5742046 & 0 \\
+                Neural Networks & 0.4730884 & 0.5043785 & 0.5175654 & 0.5169082 & 0.5317104 & 0.5614185 & 0 \\
+                \hline
+                Kappa \\
+                \hline
+                Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
+                SVMs & 0.3975886 & 0.4006295 & 0.4063126 & 0.4078579 & 0.4127812 & 0.4235146 & 0 \\
+                Neural Networks & 0.3049110 & 0.3453421 & 0.3532155 & 0.3552601 & 0.3684754 & 0.3994109 & 0 \\
+                \hline
+            \end{tabular}
+            \caption{The Accuracy And Kappa Score for Support Vector Machines and Artificial Neural Networks with Balanced Data}
+            \label{tab:13}
+        \end{table}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c|c|c| }
+                \hline
+                Age & Education & region & Category & Preficted Pay \\
+                \hline
+                22 & Grad & Texas & P & 90-110k \\
+                22 & Grad & California & P & 90-110k \\
+                \hline
+            \end{tabular}
+            \caption{Trial Record for Author}
+            \label{tab:14}
+        \end{table}
+    \end{center}
+
+    % \subsection{Length of Service}
+    % Next I will examine the
+    %
+    % \subsection{Supervisory Status}
+    %
+    % \subsection{Location}
 
 What are the differences across time and between agencies?
 

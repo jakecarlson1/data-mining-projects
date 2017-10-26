@@ -372,7 +372,8 @@ fitted_models_2005 <- compare_models(dj_edu_2005, "Education", c("Age",
                                     "Pay.110k"), "rpart", rpart_c, "rf", rf_c)
 varImp(fitted_models_2005$m1fit$finalModel)
 varImp(fitted_models_2005$m2fit$finalModel)
-rpart.plot(fitted_models_2005$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
+rpart.plot(fitted_models_2005$m1fit$finalModel, extra = 2, under = TRUE,
+           varlen = 0, faclen = 0)
 
 # 2013
 fitted_models_2013 <- compare_models(dj_edu_2013, "Education", c("Age",
@@ -381,15 +382,69 @@ fitted_models_2013 <- compare_models(dj_edu_2013, "Education", c("Age",
                                      "Pay.110k"), "rpart", rpart_c, "rf", rf_c)
 varImp(fitted_models_2013$m1fit$finalModel)
 varImp(fitted_models_2013$m2fit$finalModel)
-rpart.plot(fitted_models_2013$m1fit$finalModel, extra = 2, under = TRUE, varlen = 0, faclen = 0)
+rpart.plot(fitted_models_2013$m1fit$finalModel, extra = 2, under = TRUE,
+           varlen = 0, faclen = 0)
 
 
+# going to try with balanced classes
+# the avg number of classes is ~16000 so I will use that for each one
+# going to remove elementary school since it's such a small minority
+library(sampling)
+dj_edu_2005 <- dj_edu_2005[dj_edu_2005$Education != "Elm",]
+dj_edu_2005$Education <- factor(dj_edu_2005$Education)
+id <- strata(dj_edu_2005, stratanames="Education",
+             size=c(16000,16000,16000,16000), method="srswr")
+dj_bal_2005 <- dj_edu_2005[id$ID_unit,]
+# random forest control
+rf_c <- trainControl(method = "cv",
+                     indexOut = createFolds(dj_bal_2005$Education, k = 10))
 
-library(rpart)
-model <- rpart(Pay ~ Age + Education + LOS + Station + SupervisoryStatus, data = df_dj_2005)
-model
+fitted_models_2005 <- compare_models(dj_bal_2005, "Education", c("Age",
+                                     "Category", "Pay.30k", "Pay30.50k",
+                                     "Pay50.70k", "Pay70.90k", "Pay90k.110k",
+                                     "Pay.110k"), "rpart", rpart_c, "rf", rf_c)
 
 
+## Accurate Pay ##
+df_nasa_2013 <- subset_agencies(df_2013, c("NN"))
+df_nasa_2013 <- edu_breaks(df_nasa_2013)
+df_nasa_2013 <- df_nasa_2013[complete.cases(df_nasa_2013),]
 
-library('rpart.plot')
-rpart.plot(model, extra = 2, under = TRUE, varlen=0, faclen=0)
+# run with raw data to examine performance, will balance classes next if necessary
+lsvm_c <- trainControl(method = "cv",
+                       indexOut = createFolds(df_nasa_2013$Pay, k = 10))
+nn_c <- trainControl(method = "cv",
+                     indexOut = createFolds(df_nasa_2013$Pay, k = 10))
+
+fitted_models_nasa <- compare_models(df_nasa_2013, "Pay", c("Age", "Education",
+                                     "region", "Category"), "svmLinear",
+                                     lsvm_c, "nnet", nn_c)
+
+# balance classes
+df_nasa_bal_2013 <- df_nasa_2013[df_nasa_2013$Pay != "<30k",]
+df_nasa_bal_2013$Pay <- factor(df_nasa_bal_2013$Pay)
+id <- strata(df_nasa_bal_2013, stratanames = "Pay",
+             size = c(16000,16000,16000,16000,16000), method = "srswr")
+df_nasa_bal_2013 <- df_nasa_bal_2013[id$ID_unit,]
+
+fitted_models_nasa_bal <- compare_models(df_nasa_bal_2013, "Pay", c("Age",
+                                         "Education", "region", "Category"),
+                                         "svmLinear", lsvm_c, "nnet", nn_c)
+
+# record for self
+df_test <- data.frame(Age = c(22), Education = c("Grad"), region = c("texas", "california"), Category = c("T"))
+df_test_p <- data.frame(
+    "Age" = c(22), "EducationHS" = c(0), "EducationCol" = c(0), "EducationGrad"  = c(1),
+    "EducationDoc" = c(0), "regionflorida" = c(0), "regionhawaii" = c(0), "regionidaho" = c(0),
+    "regionindiana" = c(0), "regionkansas" = c(0), "regionlouisiana" = c(0), "regionmaryland" = c(0),
+    "regionmassachusetts" = c(0), "regionmichigan" = c(0), "regionminnesota" = c(0), "regionmississippi" = c(0),
+    "regionmissouri" = c(0), "regionnew mexico" = c(0), "regionnew york" = c(0), "regionnorth carolina" = c(0),
+    "regionohio" = c(0), "regionoregon" = c(0), "regiontexas" = c(1,0), "regionutah" = c(0),
+    "regionvermont" = c(0), "regionvirginia" = c(0), "regionwashington" = c(0), "regionwest virginia" = c(0),
+    "regionwisconsin" = c(0), "CategoryB" = c(0), "CategoryC" = c(0), "CategoryO" = c(0),
+    "CategoryP" = c(1), "CategoryT" = c(0),
+    check.names = FALSE)
+
+# need to one hot encode
+
+
