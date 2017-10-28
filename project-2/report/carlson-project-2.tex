@@ -1,9 +1,6 @@
 \documentclass{article}
 \usepackage{graphicx}
-% \usepackage{array}
-% \usepackage{multirow}
 \usepackage{hyperref}
-% \usepackage{booktabs}
 
 \begin{document}
 
@@ -36,32 +33,27 @@ I will use a variety of classification models, including Decision Trees, Artific
     Finally, I will try to build the most accurrate model possible at predicting pay. I will use Age, Education, Station, SupervisoryStatus, and Category to train two models. Potentially, people could create new records for themselves and pass them through this model to see how much they would be paid if they decided to work at an agency in a particular state. I will create a record for myself and see what I would be able to expect if I got a job in the federal government.
 
 \section{Data Preparation}
-To prepare my data for classification, I reprocess the raw payroll data. I start by removing columns that I do not plan on using for classification. The attributes I save are given in Table \ref{tab:1}. I then replace unknown values with NA, make Pay a numeric attribute, pull out the encoding for what state the employee works in from Station, and create a column that holds the whole agency name for each employee. I join the four quarters for each of the four years I am looking at into one data frame, and save this frame to disk.
+To prepare my data for classification, I reprocess the raw payroll data. I start by removing columns that I do not plan on using for classification. The attributes I save are given in Figure \ref{tab:1}. I then replace unknown values with NA, make Pay a numeric attribute, pull out the encoding for what state the employee works in from Station, and create a column that holds the whole agency name for each employee. I join the four quarters for each of the four years I am looking at into one data frame, and save this frame to disk.
 \par
 When I load these data frames, I run some additional preparation to make sure the data is ready for classification and make sure the models will train as efficiently as possible. I create a region column which translates the state encoding in Station to the actual name of the state. I convert Pay to an ordinal variable from a continuous variable by descretizing into six classes. The Pay groups are given in Table \ref{tab:2}. I then convert the ordinal Age variable to a ratio variable by taking the middle of the age range for each occurance The Age translation is given in Table \ref{tab:3}. I break Education up into groups by what level of education the employee achieved. The groups I used are listed in Table \ref{tab:9}. Next I convert the ordinal Length of Service variable to a ratio varible by taking the middle of the time span for each occurance. The translation for LOS is given in Table \ref{tab:4}. My preparation function also allows for a subset of agencies to be choosen from the saved data files.
 \par
 The scale and range of all of the attributes in the final data set are given in Table \ref{tab:5}. When I go to create a model based on a subset of my choosen columns, I will throw out any entries that are incomplete. The count of the number of records that are complete, as well as the percentage of records that are complete for each year are given in Table \ref{tab:6}.
 
     \begin{center}
-        \begin{table}
-            \centering
-            \begin{tabular}{ |c|c|c| }
-                \hline
-                Attribute & Scale & Description \\
-                \hline
-                Agency & Categorical & The four character encoding for the agency the employee worked at. \\
-                Station & Categorical & The state the employee works in. \\
-                Age & Ordinal & The age range of the employee, given in 5 year intervals. \\
-                Education & Ordinal & The education level achieved by the employee. \\
-                LOS & Ordinal & The number of years the employee has worked in the federal governemnt, given in 5 year intervals. \\
-                Category & Categorical & The general type of work the employee does, following the PATCO acronym. \\
-                Pay & Ratio & The annual pay the employee receives in U.S. Dollars. \\
-                SupervisoryStatus & Categorical & The level of leadership the employee has achieved. \\
-                \hline
-            \end{tabular}
+        \begin{figure}
+            \begin{enumerate}
+                \item Agency (Categorical): The four character encoding for the agency the employee worked at.
+                \item Station (Categorical): The state the employee works in.
+                \item Age (Ordinal): The age range of the employee, given in 5 year intervals.
+                \item Education (Ordinal): The education level achieved by the employee.
+                \item LOS (Ordinal): The number of years the employee has worked in the federal governemnt, given in 5 year intervals.
+                \item Category (Categorical): The general type of work the employee does, following the PATCO acronym.
+                \item Pay (Ratio): The annual pay the employee receives in U.S. Dollars.
+                \item SupervisoryStatus (Categorical): The level of leadership the employee has achieved.
+            \end{enumerate}
             \caption{Attributes To Be Used For Classification}
             \label{tab:1}
-        \end{table}
+        \end{figure}
     \end{center}
 
     \begin{center}
@@ -209,13 +201,13 @@ Next I will begin creating models for the each of the cases outlined in the Busi
             \centering
             \begin{tabular}{ |c|c|c|c|c|c|c|c| }
                 \hline
-                & Accuracy \\
+                & \multicolumn{7}{|c|}{Accuracy} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 Decision Trees & 0.5176392 & 0.5211121 & 0.5275774 & 0.5289369 & 0.5376409 & 0.5415454 & 0 \\
                 Random Forests & 0.5619261 & 0.5658214 & 0.5704048 & 0.5698463 & 0.5739125 & 0.5764363 & 0 \\
                 \hline
-                & Kappa \\
+                & \multicolumn{7}{|c|}{Kappa} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 Decision Trees & 0.3466076 & 0.3497777 & 0.3672808 & 0.3688381 & 0.3881202 & 0.3946472 & 0 \\
@@ -232,8 +224,7 @@ Next I will begin creating models for the each of the cases outlined in the Busi
             \centering
             \begin{tabular}{ |c|c|c|c|c| }
                 \hline
-                % & \multicomlum{2}{|c|}{2005} & \multicomlum{2}{|c|}{2013} \\
-                & 2005 & 2005 & 2013 & 2013 \\
+                & \multicolumn{2}{|c|}{2005} & \multicolumn{2}{|c|}{2013} \\
                 \hline
                 Decision Tree & Education & 9932.9 & Education & 9382.2 \\
                 & CategoryT & 7682.5 & Age & 7867.3 \\
@@ -279,7 +270,7 @@ Next I will begin creating models for the each of the cases outlined in the Busi
             \centering
             \begin{tabular}{ |c|c|c|c|c| }
                 \hline
-                & 2005 & 2005 & 2013 & 2013 \\
+                & \multicolumn{2}{|c|}{2005} & \multicolumn{2}{|c|}{2013} \\
                 \hline
                 Decision Tree & Pay.110k & 11733.8 & Pay.110k & 11483.9 \\
                 & CategoryP & 9518.1 & CategoryP & 10257.4 \\
@@ -349,13 +340,13 @@ Next I will begin creating models for the each of the cases outlined in the Busi
             \centering
             \begin{tabular}{ |c|c|c|c|c|c|c|c| }
                 \hline
-                & Accuracy \\
+                & \multicolumn{7}{|c|}{Accuracy} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 SVMs & 0.6601880 & 0.6644062 & 0.6725758 & 0.6713937 & 0.6760624 & 0.6859645 & 0 \\
                 Neural Networks & 0.5637412 & 0.6704036 & 0.6762093 & 0.6678942 & 0.6879576 & 0.6941478 & 0 \\
                 \hline
-                & Kappa \\
+                & \multicolumn{7}{|c|}{Kappa} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 SVMs & 0.4070017 & 0.4118411 & 0.4201859 & 0.4240386 & 0.4333163 & 0.4546614 & 0 \\
@@ -372,13 +363,13 @@ Next I will begin creating models for the each of the cases outlined in the Busi
             \centering
             \begin{tabular}{ |c|c|c|c|c|c|c|c| }
                 \hline
-                & Accuracy \\
+                & \multicolumn{7}{|c|}{Accuracy} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 SVMs & 0.5493379 & 0.5561194 & 0.5596496 & 0.5607548 & 0.5653801 & 0.5742046 & 0 \\
                 Neural Networks & 0.4730884 & 0.5043785 & 0.5175654 & 0.5169082 & 0.5317104 & 0.5614185 & 0 \\
                 \hline
-                & Kappa \\
+                & \multicolumn{7}{|c|}{Kappa} \\
                 \hline
                 Classifier & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max. & NA's \\
                 SVMs & 0.3975886 & 0.4006295 & 0.4063126 & 0.4078579 & 0.4127812 & 0.4235146 & 0 \\
