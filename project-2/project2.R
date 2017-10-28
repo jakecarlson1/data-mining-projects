@@ -420,6 +420,10 @@ fitted_models_nasa <- compare_models(df_nasa_2013, "Pay", c("Age", "Education",
                                      "region", "Category"), "svmLinear",
                                      lsvm_c, "nnet", nn_c)
 
+# save fitted models
+save(fitted_models_nasa, file = "../clean-data/nasa-models.Rdata")
+
+
 # balance classes
 df_nasa_bal_2013 <- df_nasa_2013[df_nasa_2013$Pay != "<30k",]
 df_nasa_bal_2013$Pay <- factor(df_nasa_bal_2013$Pay)
