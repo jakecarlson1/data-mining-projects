@@ -21,6 +21,48 @@ This report examines federal payroll data in the years 2005 and 2013. The data w
 In this report I will again be examining the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. I will look at the years 2005 and 2013 so I can gauge how the government changed as the presidency transitioned from George W. Bush to Barack Obama. This report will focus on association rule mining. The payroll data will be formatted as transaction data, where each employee is treated as a bag of features where all attributes that apply to them are placed in their bag. With the data formatted in this way, I can use the arules package to find items that occur together. These items can be treated as rules, where the occurance of some items tend to imply the occurance of another item. With these rules, along with statistics about the rule such as the support, or the ratio of instances that express the rule, and confidence, or the conditional probability that the predicted item occurs in an instance which contains all remaining items for the rule, I will build a picture of the key differences between groups of federal employees under the two presidents.
 
 \section{Data Preparation}
+I will start with the data as I prepared it for classification in Project 2. This data has been cleaned such that all unknown values were replaced with NA, Age and Length of Service were adjusted to take the middle year for the range of years given in the raw data, and Pay has ben discretized into the pay ranges given in Table \ref{tab:1}. In addition, Education is descritized into the groups given in Table \ref{tab:2}.
+\par
+I will get rid of attributes that I am not interested in for association rule mining. I will drop the Agency attribute because AgencyName already encodes this data. Likewise, I will drop Station because region records the state an employee works in.
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c| }
+                \hline
+                Pay Ranges \\
+                \hline
+                $<$30k \\
+                30-50k \\
+                50-70k \\
+                70-90k \\
+                90-110k \\
+                $>$110k \\
+                \hline
+            \end{tabular}
+            \caption{The Pay Ranges Used To Descretize Pay}
+            \label{tab:1}
+        \end{table}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                Group & Education Levels & Description \\
+                \hline
+                Elm & 0, 1 & Reached or completed elementary school \\
+                HS & 3, 4, 5, 6 & Reached or completed high school or an occupational program \\
+                Col & 7, 8, 9, 10, 11, 12, 13 & Reached or completed college with a Bachelor's degree \\
+                Grad & 14, 15, 16, 17, 18, 19, 20 & Any level of graduate studies, excluding a Doctorate \\
+                Doc & 21, 22 & A Doctorate or Post-Doctorate degree \\
+                \hline
+            \end{tabular}
+            \caption{Ordinal Education Groups}
+            \label{tab:2}
+        \end{table}
+    \end{center}
 
 \section{Modeling}
 
