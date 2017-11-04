@@ -24,6 +24,8 @@ In this report I will again be examining the federal payroll data obtained by Bu
 I will start with the data as I prepared it for classification in Project 2. This data has been cleaned such that all unknown values were replaced with NA, Age and Length of Service were adjusted to take the middle year for the range of years given in the raw data, and Pay has ben discretized into the pay ranges given in Table \ref{tab:1}. In addition, Education is descritized into the groups given in Table \ref{tab:2}.
 \par
 I will get rid of attributes that I am not interested in for association rule mining. I will drop the Agency attribute because AgencyName already encodes this data. Likewise, I will drop Station because region records the state an employee works in.
+\par
+All numeric fields will be discretized based on frequency. SupervisoryStatus must be treated as a factor so that general employees are not grouped with supervisors.
 
     \begin{center}
         \begin{table}

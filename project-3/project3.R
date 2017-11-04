@@ -5,12 +5,17 @@ load("../clean-data/persisted-full-frames.RData")
 library(arules)
 library(arulesViz)
 
-df_2013$X <- NULL
-df_2013$Agency <- NULL # same as AgencyName
-df_2013$Station <- NULL # same as region
-df_2013$Occupation <- NULL
-df_2013$region <- factor(df_2013$region)
-## also need to ohe supervisory status
+# do agency subsetting
+subset_agencies <- function(df, agency_subset = c()) {
+    # apply subset if agency_subset provided
+    if (length(agency_subset) > 0) {
+        df <- df[sapply(
+            df$Agency, FUN = function(x)
+                substring(x, 1,2) %in% agency_subset),]
+    }
+
+    return(df)
+}
 
 # apply education classes
 edu_breaks <- function(df) {
@@ -20,20 +25,52 @@ edu_breaks <- function(df) {
     return(df)
 }
 
-df_2013 <- edu_breaks(df_2013)
+prep_df <- function(df) {
+    df$X <- NULL
+    df$Agency <- NULL # same as AgencyName
+    df$Station <- NULL # same as region
+    df$Occupation <- NULL
+    df$SupervisoryStatus <- factor(df$SupervisoryStatus)
+    df$region <- factor(df$region)
 
-which(sapply(df_2013, FUN = function(i) is.numeric(i)))
+    df <- edu_breaks(df)
 
-for(i in which(sapply(df_2013, FUN = function(i) is.numeric(i)))) {
-    df_2013[[i]] <- discretize(df_2013[[i]], method = "frequency")
+    return(df)
 }
 
-trans <- as(df_2013, "transactions")
+as_trans <- function(df) {
+    for(i in which(sapply(df, FUN = function(i) is.numeric(i)))) {
+        df[[i]] <- discretize(df[[i]], method = "frequency")
+    }
+    df <- as(df, "transactions")
+    return(df)
+}
 
-itemFrequencyPlot(trans, topN = 50)
+# gen services
+df_gs_2005 <- subset_agencies(df_2005, agency_subset = c("GS"))
+trans_gs_2005 <- as_trans(prep_df(df_gs_2005))
+itemFrequencyPlot(trans_gs_2005, topN = 50)
+rules_2005 <- apriori(trans_gs_2005, parameter = list(supp = .01, conf = .8))
 
-rules <- apriori(trans, parameter = list(supp = .01, conf = .8))
+df_gs_2013 <- subset_agencies(df_2013, agency_subset = c("GS"))
+trans_gs_2013 <- as_trans(prep_df(df_gs_2013))
+itemFrequencyPlot(trans_gs_2013, topN = 50)
+rules_2013 <- apriori(trans_gs_2013, parameter = list(supp = .01, conf = .8))
+
+inspect(head(sort(rules_2005, by = "lift")))
+inspect(head(sort(rules_2013, by = "lift")))
+
+# all
+trans_2013 <- as_trans(prep_df(df_2013))
+itemFrequencyPlot(trans_2013, topN = 50)
+rules <- apriori(trans_2013, parameter = list(supp = .01, conf = .8))
+
+
 summary(rules)
 inspect(head(rules, by = "lift"))
 
+
+
 plot(rules, engine = "html")
+
+plot(rules, method = "grouped")
