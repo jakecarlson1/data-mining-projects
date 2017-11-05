@@ -74,6 +74,31 @@ trans_2013 <- as_trans(prep_df(df_2013))
 # itemFrequencyPlot(trans_2013, topN = 50)
 # rules <- apriori(trans_2013, parameter = list(supp = .01, conf = .8))
 
+freq_2005 <- apriori(trans_2005, parameter = list(target = "frequent",
+                                                  support = .01))
+freq_2005 <- sort(freq_2005, by = "support")
+inspect(head(freq_2005, n = 10))
+
+freq_2013 <- apriori(trans_2013, parameter = list(target = "frequent",
+                                                  support = .01))
+freq_2013 <- sort(freq_2013, by = "support")
+inspect(head(freq_2013, n = 10))
+
+# item size histogram
+par(mfrow = c(1,2))
+barplot(table(size(freq_2005)), xlab="Itemset Size", ylab="Count",
+        main = "Itemset Size Frequency 2005")
+barplot(table(size(freq_2013)), xlab="Itemset Size", ylab="Count",
+        main = "Itemset Size Frequency 2013")
+
+inspect(freq_2005[size(freq_2005)>5])
+inspect(freq_2013[size(freq_2013)>5])
+
+par(mfrow = c(2,1))
+itemFrequencyPlot(items(freq_2005[size(freq_2005)==5]), support = 0.0103,
+                  main = "Item Frequency for Itemsets of Size 5 (2005)")
+itemFrequencyPlot(items(freq_2013[size(freq_2013)==5]), support = 0.0103,
+                  main = "Item Frequency for Itemsets of Size 5 (2013)")
 
 summary(rules)
 inspect(head(rules, by = "lift"))

@@ -138,7 +138,139 @@ These attributes are then transformed into a transaction item matrix. The most f
     \end{center}
 
 \section{Modeling}
+In order to mine the transaction data for meaningful rules, I will examine frequent, closed, and maximal itemsets.
+
+    \subsection{Frequent Itemsets}
+    The most frequent itemsets show the attributes that are shared by the most number of employees. The most frequent itemsets have the highest support value out of all of the itemsets. I will look for itemsets that occur for 1\% of all employees. It is also useful to view itemsets with more items to see what attributes occur frequently together. The distribution of itemset sizes is given in Figure \ref{fig:1}. We see that the distribution of sizes is consistent between the two years.
+    \par
+    In order to gauge differences between the two administrations, I will examine the most frequent itemsets which contain more than five items. The relative item frequency for items in itemsets with length six are given in Figure \ref{fig:2} for 2005 and Figure \ref{fig:3} for 2013.
+    \par
+    A number of trends are apparent in these graphs. We see an increase in the ratio of employees who have a Graduate level education, as well as a reduction in the ratio of employees who have a High School level education under the Obama administration.  Also, there is a decrease in the ratio of employees who have a Length of Service between 12 and 22 years, with an increase in employees who have worked for the government for less than 12 years. This is consistent with Project 1 where I found that Obama employed newer employees, while employees hired before the Bush administration looked for employment elsewhere \cite{proj1}.
+    \par
+    Another noticable trend is the frequency of employees who worked for the Transportation Security Administration. Under Bush, the number of employees in the TSA is quite large, reflecting the growth of the agency in response to the September 11th attacks. The TSA shrunk in size relative to the VHA under Obama. This reflects the growth of the Veterans Affairs Administration under the Obama administration.
+    \par
+    To look closer at the relationships between items in these itemsets, I will pull out itemsets that do not reference a particular administration to examine features that are common across the entire federal government. Table \ref{tab:5} shows these itemsets and their support. These itemsets reflect my findings in Project 2 \cite{proj2}. Notable relationships are that a higher level of education is assocaited with a higher annual pay whan all other attributes are the same. Likewise, working for the government for longer is associated with a higher net pay. Also, The Category that applies to an employee's role is assocaited with different pay levels. In the examples given, Administrative roles are paied more than Technical roles. These trends hold for both administrations. The main difference is that employees in Techinical roles with a High School education have slightly higher pay under Obama than under Bush.
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/freq-itemset-sizes.pdf}
+            \caption{The Distribution of Itemset Sizes for 2005 and 2013}
+            \label{fig:1}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/item-freq-2005.pdf}
+            \caption{The Distribution of Items in Itemsets of Size Six for 2005}
+            \label{fig:2}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/item-freq-2013.pdf}
+            \caption{The Distribution of Items in Itemsets of Size Six for 2013}
+            \label{fig:3}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                \multicolumn{2}{|c|}{2005} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{Age=[17,47),
+                Education=HS,
+                LOS=[1,12),
+                Category=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0213 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Category=A,
+                Pay=50-70k,
+                SupervisoryStatus=8\} & 0.0172 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Categroy=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0170 \\
+                \{Age=[17,47),
+                Education=HS,
+                LOS=[1,12),
+                Category=T,
+                Pay=$<$30k,
+                SupervisoryStatus=8\} & 0.0165 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[12,22),
+                Category=A,
+                Pay=70-90k,
+                SupervisoryStatus=8\} & 0.0133 \\
+                \hline
+                \multicolumn{2}{|c|}{2013} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Category=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0234 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Category=A,
+                Pay=50-70k,
+                SupervisoryStatus=8\} & 0.0192 \\
+                \{Age=[17,47),
+                Education=HS,
+                LOS=[1,12),
+                Categroy=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0178 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Category=A,
+                Pay=70-90k,
+                SupervisoryStatus=8\} & 0.0165 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[12,22),
+                Category=C,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0133 \\
+                \hline
+            \end{tabular}
+            \caption{Frequent Itemsets of Size Six in 2005 and 2013}
+            \label{tab:5}
+        \end{table}
+    \end{center}
 
 \section{Evaluation}
+
+\begin{thebibliography}{10}
+    \bibitem{proj1}
+    Jake Carlson
+    \textit{CSE 5331 - Data Mining Project 1}
+    \texttt{https://github.com/jakecarlson1/data-mining-projects/blob/master/}
+    \texttt{project-1/report/carlson-project-1.pdf}
+
+    \bibitem{proj2}
+    Jake Carlson
+    \textit{CSE 5331 - Data Mining Project 2}
+    \texttt{https://github.com/jakecarlson1/data-mining-projects/blob/master/}
+    \texttt{project-2/report/carlson-project-2.pdf}
+
+\end{thebibliography}
 
 \end{document}
