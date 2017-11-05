@@ -60,10 +60,19 @@ rules_2013 <- apriori(trans_gs_2013, parameter = list(supp = .01, conf = .8))
 inspect(head(sort(rules_2005, by = "lift")))
 inspect(head(sort(rules_2013, by = "lift")))
 
+edu <- grep("Education=", itemLabels(trans_gs_2005), value = TRUE)
+
+
+quality(rules_2005) <- cbind(quality(rules_2005),
+    interestMeasure(rules_2005, measure=c("phi", "gini"),
+        trans = trans_gs_2005))
+
 # all
+trans_2005 <- as_trans(prep_df(df_2005))
+
 trans_2013 <- as_trans(prep_df(df_2013))
-itemFrequencyPlot(trans_2013, topN = 50)
-rules <- apriori(trans_2013, parameter = list(supp = .01, conf = .8))
+# itemFrequencyPlot(trans_2013, topN = 50)
+# rules <- apriori(trans_2013, parameter = list(supp = .01, conf = .8))
 
 
 summary(rules)

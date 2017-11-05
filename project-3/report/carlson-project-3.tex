@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{multirow}
 
 \begin{document}
 
@@ -25,7 +26,9 @@ I will start with the data as I prepared it for classification in Project 2. Thi
 \par
 I will get rid of attributes that I am not interested in for association rule mining. I will drop the Agency attribute because AgencyName already encodes this data. Likewise, I will drop Station because region records the state an employee works in.
 \par
-All numeric fields will be discretized based on frequency. SupervisoryStatus must be treated as a factor so that general employees are not grouped with supervisors.
+All numeric fields will be discretized based on frequency **explain why**. SupervisoryStatus must be treated as a factor so that general employees are not grouped with supervisors. The final list of attributes is given in Table \ref{tab:3}.
+\par
+These attributes are then transformed into a transaction item matrix. The most frequent items show us what attributes are the most common for employees to have. Summaries for both the 2005 and 2013 transaction data sets are given in Table \ref{tab:4}. We see that for both years, the most common employees are non-supervisors. The majority of employees are also college educated and have been working in the federal government for less than twelve years. Most employees are younger than 47 years old and the most frequent employment category is Administrative.
 
     \begin{center}
         \begin{table}
@@ -63,6 +66,74 @@ All numeric fields will be discretized based on frequency. SupervisoryStatus mus
             \end{tabular}
             \caption{Ordinal Education Groups}
             \label{tab:2}
+        \end{table}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                Attribute & Scale & Range \\
+                \hline
+                AgencyName & Nominal & The name of each agency \\
+                region & Nominal & The name of the state \\
+                Age & Interval & [17,47), [47,57), [57,75] \\
+                Education & Ordinal & Elm, HS, Col, Grad, Doc \\
+                LOS & Interval & [1,22), 22, [27,35] \\
+                Category & Nominal & P, A, T, C, O, B \\
+                Pay & Ordinal & $<$30k, 30-50k, 50-70k, 70-90k, 90-110k, $>$110k \\
+                SupervisoryStatus & Nominal & 2, 4, 5, 6, 7, 8 \\
+                \hline
+            \end{tabular}
+            \caption{Final Data Set Attributes}
+            \label{tab:3}
+        \end{table}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                \multirow{8}{*}{2005} & Elements & 4,720,680 \\
+                \cline{2-3}
+                & Item & Count \\
+                \cline{2-3}
+                & SupervisoryStatus=8 & 4,081,468 \\
+                & Education=Col & 2,190,442 \\
+                & Age=[17,47) & 2,087,004 \\
+                & LOS=[1,12) & 1,900,001 \\
+                & Category=A & 1,716,162 \\
+                \cline{2-3}
+                & Itemset Length & Count \\
+                \cline{2-3}
+                & 4 & 18 \\
+                & 5 & 2529 \\
+                & 6 & 85,052 \\
+                & 7 & 2,034,281 \\
+                & 8 & 2,598,800 \\
+                \hline
+                \multirow{8}{*}{2013} & Elements & 5,323,899 \\
+                \cline{2-3}
+                & Item & Count \\
+                \cline{2-3}
+                & SupervisoryStatus=8 & 4,502,511 \\
+                & Education=Col & 2,574,899 \\
+                & LOS=[1,12) & 2,568,556 \\
+                & Age=[17,47) & 2,276,609 \\
+                & Category=A & 2,034,255 \\
+                \cline{2-3}
+                & Itemset Length & Count \\
+                \cline{2-3}
+                & 5 & 126 \\
+                & 6 & 13,770 \\
+                & 7 & 2,173,306 \\
+                & 8 & 3,136,697 \\
+                \hline
+            \end{tabular}
+            \caption{Summaries of 2005 and 2013 Transaction Data Sets}
+            \label{tab:4}
         \end{table}
     \end{center}
 
