@@ -68,11 +68,9 @@ quality(rules_2005) <- cbind(quality(rules_2005),
         trans = trans_gs_2005))
 
 # all
+## frequent
 trans_2005 <- as_trans(prep_df(df_2005))
-
 trans_2013 <- as_trans(prep_df(df_2013))
-# itemFrequencyPlot(trans_2013, topN = 50)
-# rules <- apriori(trans_2013, parameter = list(supp = .01, conf = .8))
 
 freq_2005 <- apriori(trans_2005, parameter = list(target = "frequent",
                                                   support = .01))
@@ -94,17 +92,35 @@ barplot(table(size(freq_2013)), xlab="Itemset Size", ylab="Count",
 inspect(freq_2005[size(freq_2005)>5])
 inspect(freq_2013[size(freq_2013)>5])
 
-par(mfrow = c(2,1))
-itemFrequencyPlot(items(freq_2005[size(freq_2005)==5]), support = 0.0103,
-                  main = "Item Frequency for Itemsets of Size 5 (2005)")
-itemFrequencyPlot(items(freq_2013[size(freq_2013)==5]), support = 0.0103,
-                  main = "Item Frequency for Itemsets of Size 5 (2013)")
+itemFrequencyPlot(items(freq_2005[size(freq_2005)==6]), support = 0.0103,
+                  main = "Item Frequency for Itemsets of Size 6 (2005)")
+itemFrequencyPlot(items(freq_2013[size(freq_2013)==6]), support = 0.0103,
+                  main = "Item Frequency for Itemsets of Size 6 (2013)")
+
+## closed
+df_nasa_2005 <- subset_agencies(df_2005, c("NN"))
+df_nasa_2013 <- subset_agencies(df_2013, c("NN"))
+
+trans_nasa_2005 <- as_trans(prep_df(df_nasa_2005))
+trans_nasa_2013 <- as_trans(prep_df(df_nasa_2013))
+
+closed_2005 <- apriori(trans_nasa_2005, parameter = list(target = "closed",
+                                                         support = .01))
+closed_2005 <- sort(closed_2005, by = "support")
+inspect(head(closed_2005, n = 10))
+
+closed_2013 <- apriori(trans_nasa_2013, parameter = list(target = "closed",
+                                                         support = .01))
+closed_2013 <- sort(closed_2013, by = "support")
+inspect(head(closed_2013, n = 10))
+
+
+
+
+
 
 summary(rules)
 inspect(head(rules, by = "lift"))
 
-
-
 plot(rules, engine = "html")
-
 plot(rules, method = "grouped")

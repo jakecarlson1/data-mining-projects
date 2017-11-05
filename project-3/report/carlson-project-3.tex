@@ -178,7 +178,7 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \begin{center}
         \begin{table}
             \centering
-            \begin{tabular}{ |c|c|c| }
+            \begin{tabular}{ |c|c| }
                 \hline
                 \multicolumn{2}{|c|}{2005} \\
                 \hline
@@ -255,6 +255,54 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
             \label{tab:5}
         \end{table}
     \end{center}
+
+    \subsection{Closed Itemsets}
+    Closed frequent itemsets are frequent itemsets that do not have a superset with a larger support value. These will show the general features that apply to large portions of the subject population. I would expect the closed frequent itemsets to express similar information to the summary statistics about the transaction data. To get the most out of the closed itemsets, I will subset the transaction data sets to a single agency to see how the structure changes between the two administrations. I will examine NASA.
+    \par
+    To generate this transaction data, I subsetted from the original data frames for each year and then discretized numeric attributes by frequency. This produced splits that were slightly different than when I processed the whole data frames in bulk. Only the intervals for 2013 were affected due to the increase in young employees under Obama.
+    \par
+    The closed frequent itemsets for each year are given in Table \ref{tab:6}. We see the ratio of supervisors increases in the later years, which is accompanied by an increase in Professional type employees. There are also more employees in professional roles who are not supervisors. This indicates that NASA developed a taller organizational structure under Obama. There is also a slight decrease in the ratio of employees who have College degrees. This is likely due to the increase in the number of Graduate level employees who joined the federal government under Obama.
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c| }
+                \hline
+                \multicolumn{2}{|c|}{2005} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{SupervisoryStatus=8\} & 0.8606 \\
+                \{Category=P\} & 0.6461 \\
+                \{LOS=[1,22)\} & 0.5684 \\
+                \{Category=P, SupervisoryStatus=8\} & 0.5440 \\
+                \{LOS=[1,22), SupervisoryStatus=8\} & 0.5102 \\
+                \{Education=Col\} & 0.4620 \\
+                \{Age=[17,47)\} & 0.4407 \\
+                \{Education=Col, SupervisoryStatus=8\} & 0.4088 \\
+                \hline
+                \multicolumn{2}{|c|}{2013} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{SupervisoryStatus=8\} & 0.8279 \\
+                \{Category=P\} & 0.6946 \\
+                \{Category=P, SupervisoryStatus=8\} & 0.5693 \\
+                \{Pay=$>$110k\} & 0.5620 \\
+                \{Age=[17,52)\} & 0.4937 \\
+                \{Category=P, Pay=$>$100k\} & 0.4646 \\
+                \{Education=Col\} & 0.4388 \\
+                \{Age=[17,52), SupervisoryStatus=8\} & 0.4251 \\
+                \hline
+            \end{tabular}
+            \caption{Closed Frequent Itemsets for NASA in 2005 and 2013}
+            \label{tab:6}
+        \end{table}
+    \end{center}
+
+    \subsection{Maximal Itemsets}
+
+    \subsection{Rules}
 
 \section{Evaluation}
 
