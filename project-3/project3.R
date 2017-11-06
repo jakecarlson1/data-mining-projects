@@ -125,6 +125,27 @@ max_2013 <- apriori(trans_2013, parameter = list(target = "maximal",
 max_2013 <- sort(max_2013, by = "support")
 inspect(head(max_2013, n = 10))
 
+## rules
+pays <- grep("Pay=", itemLabels(trans_2005), value = TRUE)
+edus <- grep("Education=", itemLabels(trans_2005), value = TRUE)
+agencies <- grep("AgencyName=", itemLabels(trans_2005), value = TRUE)
+supers <- grep("SupervisoryStatus=", itemLabels(trans_2005), value = TRUE)
+
+rules_2005 <- apriori(trans_2005, parameter = list(supp = .01, conf = .8),
+                      appearance = list(none = agencies, rhs = supers))
+agencies <- grep("AgencyName=", itemLabels(trans_2013), value = TRUE)
+rules_2013 <- apriori(trans_2013, parameter = list(supp = .01, conf = .8),
+                      appearance = list(none = agencies, rhs = supers))
+
+inspect(head(sort(rules_2005, by = "lift")))
+inspect(head(sort(rules_2013, by = "lift")))
+
+quality(rules_2005) <- cbind(quality(rules_2005),
+    interestMeasure(rules_2005, measure=c("phi", "gini"),
+        trans = trans_2005))
+quality(rules_2013) <- cbind(quality(rules_2013),
+    interestMeasure(rules_2013, measure=c("phi", "gini"),
+        trans = trans_2013))
 
 
 summary(rules)
