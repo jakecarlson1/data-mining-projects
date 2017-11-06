@@ -301,8 +301,78 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \end{center}
 
     \subsection{Maximal Itemsets}
+    Itemsets are maximally frequent if none of their immediate supersets are frequent. They are the largest itemsets for the items they contain while still remaining frequent. These will show us the largest itemsets that still apply to our threshold number of employees. The top five maximally frequent itemsets by support are given in Table \ref{tab:7}.
+    \par
+    The most interesting maximal itemset is itemset five for 2005. This itemset indicates a large number of supervisors and managers had a high school education under Bush.
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c| }
+                \hline
+                \multicolumn{2}{|c|}{2005} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{Age=[17,47),
+                Education=Grad,
+                LOS=[1,12),
+                Category=P,
+                SupervisoryStatus=8\} & 0.0255 \\
+                \{Education=Grad,
+                Category=P,
+                Pay=$>$110k
+                SupervisoryStatus=8\} & 0.0250 \\
+                \{Education=Col,
+                Category=P,
+                Pay=70-90k,
+                SupervisoryStatus=8\} & 0.0241 \\
+                \{Age=[47,57),
+                Education=HS,
+                Category=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0241 \\
+                \{Education=HS,
+                SupervisoryStatus=2\} & 0.0227 \\
+                \hline
+                \multicolumn{2}{|c|}{2013} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{Age=[47,57),
+                Education=Col,
+                LOS=[22,35],
+                Category=A,
+                SupervisoryStatus=8\} & 0.0286 \\
+                \{Education=HS,
+                Category=A,
+                Pay=70-90k,
+                SupervisoryStatus=8\} & 0.0254 \\
+                \{Age=[57,75],
+                Education=Col,
+                LOS=[22,35],
+                Category=A,
+                SupervisoryStatus=8\} & 0.0234 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[1,12),
+                Category=T,
+                Pay=30-50k,
+                SupervisoryStatus=8\} & 0.0234 \\
+                \{Age=[17,47),
+                Education=Col,
+                LOS=[12,22),
+                Category=A,
+                SupervisoryStatus=8\} & 0.0233 \\
+                \hline
+            \end{tabular}
+            \caption{Maximal Frequent Itemsets in 2005 and 2013}
+            \label{tab:7}
+        \end{table}
+    \end{center}
 
     \subsection{Rules}
+    
 
 \section{Evaluation}
 

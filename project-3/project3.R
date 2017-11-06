@@ -114,8 +114,16 @@ closed_2013 <- apriori(trans_nasa_2013, parameter = list(target = "closed",
 closed_2013 <- sort(closed_2013, by = "support")
 inspect(head(closed_2013, n = 10))
 
+## maximal
+max_2005 <- apriori(trans_2005, parameter = list(target = "maximal",
+                                                 support = .01))
+max_2005 <- sort(max_2005, by = "support")
+inspect(head(max_2005, n = 10))
 
-
+max_2013 <- apriori(trans_2013, parameter = list(target = "maximal",
+                                                 support = .01))
+max_2013 <- sort(max_2013, by = "support")
+inspect(head(max_2013, n = 10))
 
 
 
