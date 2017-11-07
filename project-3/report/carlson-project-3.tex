@@ -374,7 +374,120 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \subsection{Rules}
     Rules are itemsets where one of the items is a consequence of the others. In other words, the consequence is a prediction based on the remaining items in the itemset. I will use association rules to look for the common features of each SupervisoryStatus. In order to get an idea of the general rules that apply to the government as a whole, I will exclude rules that reference a particular agency.
     \par
-    
+    The list of rules for supervisors and general employees for each year is given in Table \ref{tab:8}. These rules are ranked by confidence.
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                \multicolumn{3}{|c|}{2005} \\
+                \hline
+                Antecedents & Consequent & Confidence \\
+                \hline
+                \{Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9761 \\
+                \{Category=B,
+                Pay=50-70k,
+                region=florida\} & \{SupervisoryStatus=2\} & 0.8890 \\
+                \{Age=[47,57),
+                LOS=[12,22),
+                Category=O,
+                Pay=70-90k\} & \{SupervisoryStatus=2\} & 0.8333 \\
+                \{Age=[47,57),
+                Education=Col,
+                LOS=[12,22),
+                Category=O,
+                Pay=70-90k\} & \{SupervisoryStatus=2\} & 0.8287 \\
+                \{Age=[47,57),
+                Education=Col,
+                Category=O,
+                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8231 \\
+                \{Education=Col,
+                Category=O,
+                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8079 \\
+                \{Age=[47,57),
+                Category=A,
+                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                \{Education=HS,
+                Category=T,
+                Pay=$<$30k,
+                region=florida\} & \{SupervisoryStatus=8\} & 1 \\
+                \{Education=HS,
+                LOS=[1,12),
+                Category=T,
+                Pay=$<$30k,
+                region=florida\} & \{SupervisoryStatus=8\} & 1 \\
+                \{Age=[47,57),
+                LOS=[1,12),
+                Category=A,
+                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                \{Category=T,
+                Pay=$<$30k,
+                region=georgia\} & \{SupervisoryStatus=8\} & 1 \\
+                \{LOS=[1,12),
+                Category=T,
+                Pay=$<$30k,
+                region=georgia\} & \{SupervisoryStatus=8\} & 1 \\
+                \hline
+                \multicolumn{3}{|c|}{2013} \\
+                \hline
+                Itemset & Support \\
+                \hline
+                \{Age=[47,57),
+                Education=Col,
+                LOS=[22,35],
+                Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9289 \\
+                \{Education=Col,
+                LOS=[22,35],
+                Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9220 \\
+                \{Age=[47,57),
+                LOS=[22,35],
+                Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9168 \\
+                \{LOS=[22,35],
+                Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.8949 \\
+                \{Age=[17,47),
+                Education=HS,
+                LOS=[12,22),
+                Category=O,
+                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8828 \\
+                \{Age=[47,57),
+                Education=Col,
+                Category=O,
+                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.8821 \\
+                \{Age=[57,75],
+                Category=T,
+                Pay=$<$30k\} & \{SupervisoryStatus=2\} & 1 \\
+                \{Education=Doc,
+                Pay=50-70k,
+                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                \{Education=Doc,
+                LOS=[1,12),
+                Pay=50-70k,
+                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                \{Education=Doc,
+                Category=P,
+                Pay=50-70k,
+                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                \{Age=[57,75],
+                LOS=[1,12),
+                Category=T,
+                Pay=$<$30k\} & \{SupervisoryStatus=2\} & 1 \\
+                \{Education=Doc,
+                LOS=[1,12),
+                Category=P,
+                Pay=50-70k,
+                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                \hline
+            \end{tabular}
+            \caption{Top SupervisoryStatus Rules for 2005 and 2013}
+            \label{tab:8}
+        \end{table}
+    \end{center}
 
 
 \section{Evaluation}

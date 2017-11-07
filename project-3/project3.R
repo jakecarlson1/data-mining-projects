@@ -131,14 +131,28 @@ edus <- grep("Education=", itemLabels(trans_2005), value = TRUE)
 agencies <- grep("AgencyName=", itemLabels(trans_2005), value = TRUE)
 supers <- grep("SupervisoryStatus=", itemLabels(trans_2005), value = TRUE)
 
-rules_2005 <- apriori(trans_2005, parameter = list(supp = .01, conf = .8),
+rules_2005 <- apriori(trans_2005, parameter = list(supp = .0001, conf = .8),
                       appearance = list(none = agencies, rhs = supers))
 agencies <- grep("AgencyName=", itemLabels(trans_2013), value = TRUE)
-rules_2013 <- apriori(trans_2013, parameter = list(supp = .01, conf = .8),
+rules_2013 <- apriori(trans_2013, parameter = list(supp = .0001, conf = .8),
                       appearance = list(none = agencies, rhs = supers))
 
-inspect(head(sort(rules_2005, by = "lift")))
-inspect(head(sort(rules_2013, by = "lift")))
+inspect(head(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=2"),
+                  by = "confidence")))
+inspect(head(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=8"),
+                  by = c("confidence", "support"))))
+inspect(head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=2"),
+                  by = "confidence")))
+inspect(head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=8"),
+                  by = c("confidence", "support"))))
+
+plot(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=2"),
+               by = "confidence"), method = "grouped")
+
+
+plot(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=8"),
+          by = "confidence"), method="graph", control=list(type="items"),
+     engine = "html")
 
 quality(rules_2005) <- cbind(quality(rules_2005),
     interestMeasure(rules_2005, measure=c("phi", "gini"),
@@ -146,6 +160,7 @@ quality(rules_2005) <- cbind(quality(rules_2005),
 quality(rules_2013) <- cbind(quality(rules_2013),
     interestMeasure(rules_2013, measure=c("phi", "gini"),
         trans = trans_2013))
+
 
 
 summary(rules)
