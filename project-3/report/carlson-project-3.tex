@@ -372,9 +372,13 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \end{center}
 
     \subsection{Rules}
-    Rules are itemsets where one of the items is a consequence of the others. In other words, the consequence is a prediction based on the remaining items in the itemset. I will use association rules to look for the common features of each SupervisoryStatus. In order to get an idea of the general rules that apply to the government as a whole, I will exclude rules that reference a particular agency.
+    Rules are itemsets where one of the items is a consequence of the others. In other words, the consequence is a prediction based on the remaining items in the itemset. I will use association rules to look for the common features of each SupervisoryStatus. In order to get an idea of the general rules that apply to the government as a whole, I will exclude rules that reference a particular agency or state.
     \par
-    The list of rules for supervisors and general employees for each year is given in Table \ref{tab:8}. These rules are ranked by confidence.
+    I will look for rules where SupervisoryStatus is the consequence. I will only examine supervisors and non-supervisors. In order to generate rules that have supervisor as the consequence, the minimum support threshold must be 0.01\% of the population.
+    \par
+    The list of rules for supervisors and general employees for each year is given in Table \ref{tab:8}. These rules are ranked by confidence. The confidence level of rules for general employees all equal one. This indicates all itemsets that contain the antecedent contain the consequent. To break ties, I ranked these rules by support after confidence to display the six rules that occur most often.
+    \par
+    The parallel coordinate plots for these rules (Figure \ref{fig:4} and Figure \ref{fig:5}) show the attributes of each antecedent and their consequence. The separation of the two classes shows which attributes contribute to the supervisor/non-supervisor consequence. Similarly, these plots show the attributes that are commonly shared between the two classes. These shared attributes change from 2005 to 2013. Under Bush the only attribute shared between the groups is having an age between 47 and 57. This indicates older employees were not guaranteed promotions to supervisory level positions. Under Obama, this attribute is not shared between my selected rules. Instead, shared attributes are having a high school level education and an age between 17 and 47. Moreover, these attributes occur together for supervisors as indicated by the same line connecting these points. This shows that more supervisory positions were made available for younger, less educated employees.
 
     \begin{center}
         \begin{table}
@@ -461,22 +465,22 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
                 Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.8821 \\
                 \{Age=[57,75],
                 Category=T,
-                Pay=$<$30k\} & \{SupervisoryStatus=2\} & 1 \\
+                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
                 \{Education=Doc,
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
                 \{Education=Doc,
                 LOS=[1,12),
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
                 \{Education=Doc,
                 Category=P,
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
                 \{Age=[57,75],
                 LOS=[1,12),
                 Category=T,
-                Pay=$<$30k\} & \{SupervisoryStatus=2\} & 1 \\
+                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
                 \{Education=Doc,
                 LOS=[1,12),
                 Category=P,
@@ -489,6 +493,21 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
         \end{table}
     \end{center}
 
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/supers-para-2005.pdf}
+            \caption{Parallel Coordinate Plot of SupervisoryStatus for 2005}
+            \label{fig:4}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/supers-para-2013.pdf}
+            \caption{Parallel Coordinate Plot of SupervisoryStatus for 2013}
+            \label{fig:5}
+        \end{figure}
+    \end{center}
 
 \section{Evaluation}
 

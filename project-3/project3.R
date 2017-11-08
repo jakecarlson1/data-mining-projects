@@ -129,13 +129,14 @@ inspect(head(max_2013, n = 10))
 pays <- grep("Pay=", itemLabels(trans_2005), value = TRUE)
 edus <- grep("Education=", itemLabels(trans_2005), value = TRUE)
 agencies <- grep("AgencyName=", itemLabels(trans_2005), value = TRUE)
+regions <- grep("region=", itemLabels(trans_2005), value = TRUE)
 supers <- grep("SupervisoryStatus=", itemLabels(trans_2005), value = TRUE)
 
 rules_2005 <- apriori(trans_2005, parameter = list(supp = .0001, conf = .8),
-                      appearance = list(none = agencies, rhs = supers))
+                      appearance = list(none = c(agencies, regions), rhs = supers))
 agencies <- grep("AgencyName=", itemLabels(trans_2013), value = TRUE)
 rules_2013 <- apriori(trans_2013, parameter = list(supp = .0001, conf = .8),
-                      appearance = list(none = agencies, rhs = supers))
+                      appearance = list(none = c(agencies, regions), rhs = supers))
 
 inspect(head(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=2"),
                   by = "confidence")))
@@ -146,8 +147,11 @@ inspect(head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=2"),
 inspect(head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=8"),
                   by = c("confidence", "support"))))
 
-plot(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=2"),
-               by = "confidence"), method = "grouped")
+plot(c(head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=2"),
+               by = "confidence")),
+       head(sort(subset(rules_2013, subset = rhs %in% "SupervisoryStatus=8"),
+               by = c("confidence", "support")))), method = "paracoord",
+     control = list(main = "12 SupervisoryStatus Rules (2013)", reorder=TRUE))
 
 
 plot(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=8"),
