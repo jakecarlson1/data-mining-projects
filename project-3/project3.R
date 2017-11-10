@@ -158,17 +158,16 @@ plot(sort(subset(rules_2005, subset = rhs %in% "SupervisoryStatus=8"),
           by = "confidence"), method="graph", control=list(type="items"),
      engine = "html")
 
-quality(rules_2005) <- cbind(quality(rules_2005),
-    interestMeasure(rules_2005, measure=c("phi", "gini"),
-        trans = trans_2005))
-quality(rules_2013) <- cbind(quality(rules_2013),
-    interestMeasure(rules_2013, measure=c("phi", "gini"),
-        trans = trans_2013))
 
+super_2 <- edu_breaks(df_2013[df_2013$SupervisoryStatus == 2,])
+super_2_hs <- super_2[super_2$Education == "HS",]
+super_2_nhs <- super_2[super_2$Education != "HS",]
+super_2_hs_tab <- table(super_2_hs$AgencyName)
+super_2_nhs_tab <- table(super_2_nhs$AgencyName)
+head(sort(super_2_hs_tab/super_2_nhs_tab, decreasing = TRUE))[1:20]
 
-
-summary(rules)
-inspect(head(rules, by = "lift"))
-
-plot(rules, engine = "html")
-plot(rules, method = "grouped")
+super_2_young <- super_2[super_2$Age < 47,]
+super_2_old <- super_2[super_2$Age >= 47,]
+super_2_young_tab <- table(super_2_young$AgencyName)
+super_2_old_tab <- table(super_2_old$AgencyName)
+head(sort(super_2_young_tab/super_2_old_tab, decreasing = TRUE))[1:20]
