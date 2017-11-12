@@ -11,7 +11,7 @@
 \maketitle
 
 \abstract
-This report examines federal payroll data in the years 2005 and 2013. The data will be transformed into transaction data so that association rule mining can be performed. By looking at the differences in maximal, closed, and frequent itemsets, I will be able to understand common features about employees under the presidencies of George W. Bush and Barack Obama.
+This report examines federal payroll data in the years 2005 and 2013. The data will be transformed into transaction data so that association rule mining can be performed. By looking at the differences in maximal, closed, and frequent itemsets, I will be able to understand common features about employees under the presidencies of George W. Bush and Barack Obama. We will see that more features are shared between supervisors under Obama than Bush. I will then look at the agencies where these shared attributes are most common to develop a list of agencies where employees of certain attributes have a better change of being promoted to a supervisor.
 
 \newpage
 
@@ -382,7 +382,9 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \par
     The parallel coordinate plots for these rules (Figure \ref{fig:4} and Figure \ref{fig:5}) show the attributes of each antecedent and their consequence. The separation of the two classes shows which attributes contribute to the supervisor/non-supervisor consequence. Similarly, these plots show the attributes that are commonly shared between the two classes. These shared attributes change from 2005 to 2013. Under Bush the only attribute shared between the groups is having an age between 47 and 57. This indicates older employees were not guaranteed promotions to supervisory level positions. Under Obama, this attribute is not shared between my selected rules. Instead, shared attributes are having a high school level education and an age between 17 and 47. Moreover, these attributes occur together for supervisors as indicated by the same line connecting these points. This shows that more supervisory positions were made available for younger, less educated employees.
     \par
-    To make a tool that is useful for current employees to see if they are a likely candidate for a promotion, I will look at the ratio of supervisors that have a high school level education to the remaining superviors, by agency. By looking at the ratio for each agency, employees will be able to see if they have a better chance of getting a promotion at a different agency.
+    To make a tool that is useful for current employees to see if they are a likely candidate for a promotion, I will look at the ratio of supervisors that are in the youngest age range to the total number of supervisors for each agency. The agencies that have the highest ratio of young supervisors are the ones where younger employees would have a better chance of getting a promotion. The top six agencies based on this ratio are given in Table \ref{tab:9}.
+    \par
+    The office with the highest ratio of young supervisors is the Office of the Assistant Secretary for Congressional and Intergovernmental Relations where young supervisors out number the remaining supervisors by three to one.
 
     \begin{center}
         \begin{table}
@@ -511,6 +513,26 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
             \caption{Parallel Coordinate Plot of SupervisoryStatus for 2013}
             \label{fig:5}
         \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c| }
+                \hline
+                Agency & Ratio \\
+                \hline
+                ASST SEC FOR CONGR \& INTERGOV RELATIONS & 0.75 \\
+                OFFICE OF COMMUNICATIONS AND MARKETING & 0.714 \\
+                OFC OF LEGIS AND CONGRESSIONAL AFFAIRS & 0.666 \\
+                OFC OF SUSTAINABLE HOUSING \& COMMUNTIES & 0.643 \\
+                OFC OF ASST SEC FOR POLICY & 0.625 \\
+                NATIONAL SECURITY COUNCIL & 0.578 \\
+                \hline
+            \end{tabular}
+            \caption{Agencies with the Highest Number of Young Supervisors}
+            \label{tab:9}
+        \end{table}
     \end{center}
 
 \section{Evaluation}
