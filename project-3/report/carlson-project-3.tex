@@ -19,12 +19,12 @@ This report examines federal payroll data in the years 2005 and 2013. The data w
 \newpage
 
 \section{Business Understanding}
-In this report I will again be examining the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. I will look at the years 2005 and 2013 so I can gauge how the government changed as the presidency transitioned from George W. Bush to Barack Obama. This report will focus on association rule mining. The payroll data will be formatted as transaction data, where each employee is treated as a bag of features where all attributes that apply to them are placed in their bag. With the data formatted in this way, I can use the arules package to find items that occur together. These items can be treated as rules, where the occurance of some items tend to imply the occurance of another item. With these rules, along with statistics about the rule such as the support, or the ratio of instances that express the rule, and confidence, or the conditional probability that the predicted item occurs in an instance which contains all remaining items for the rule, I will build a picture of the key differences between groups of federal employees under the two presidents.
+In this report I will again be examining the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. I will look at the years 2005 and 2013 so I can gauge how the government changed as the presidency transitioned from George W. Bush to Barack Obama. This report will focus on association rule mining. The payroll data will be formatted as transaction data, where each employee is treated as a bag of features where all attributes that apply to them are placed in their bag. With the data formatted in this way, I can use the arules package to find items that occur together. These items can be treated as rules, where the occurrence of some items tend to imply the occurrence of another item. With these rules, along with statistics about the rule such as the support, or the ratio of instances that express the rule, and confidence, or the conditional probability that the predicted item occurs in an instance which contains all remaining items for the rule, I will build a picture of the key differences between groups of federal employees under the two presidents.
 \par
 I will look at rules for determining what the SupervisoryStatus of an employee is. This will show what features are most associated with the different supervisor level. With these rules, current employees can look at the differences between themselves and the next supervisory class to see if they think they are deserving of a promotion.
 
 \section{Data Preparation}
-I will start with the data as I prepared it for classification in Project 2. This data has been cleaned such that all unknown values were replaced with NA, Age and Length of Service were adjusted to take the middle year for the range of years given in the raw data, and Pay has ben discretized into the pay ranges given in Table \ref{tab:1}. In addition, Education is descritized into the groups given in Table \ref{tab:2}.
+I will start with the data as I prepared it for classification in Project 2. This data has been cleaned such that all unknown values were replaced with NA, Age and Length of Service were adjusted to take the middle year for the range of years given in the raw data, and Pay has ben discretized into the pay ranges given in Table \ref{tab:1}. In addition, Education is discretized into the groups given in Table \ref{tab:2}.
 \par
 I will get rid of attributes that I am not interested in for association rule mining. I will drop the Agency attribute because AgencyName already encodes this data. Likewise, I will drop Station because region records the state an employee works in.
 \par
@@ -47,7 +47,7 @@ These attributes are then transformed into a transaction item matrix. The most f
                 $>$110k \\
                 \hline
             \end{tabular}
-            \caption{The Pay Ranges Used To Descretize Pay}
+            \caption{The Pay Ranges Used To Discretize Pay}
             \label{tab:1}
         \end{table}
     \end{center}
@@ -149,9 +149,9 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \par
     A number of trends are apparent in these graphs. We see an increase in the ratio of employees who have a Graduate level education, as well as a reduction in the ratio of employees who have a High School level education under the Obama administration.  Also, there is a decrease in the ratio of employees who have a Length of Service between 12 and 22 years, with an increase in employees who have worked for the government for less than 12 years. This is consistent with Project 1 where I found that Obama employed newer employees, while employees hired before the Bush administration looked for employment elsewhere \cite{proj1}.
     \par
-    Another noticable trend is the frequency of employees who worked for the Transportation Security Administration. Under Bush, the number of employees in the TSA is quite large, reflecting the growth of the agency in response to the September 11th attacks. The TSA shrunk in size relative to the VHA under Obama. This reflects the growth of the Veterans Affairs Administration under the Obama administration.
+    Another noticeable trend is the frequency of employees who worked for the Transportation Security Administration. Under Bush, the number of employees in the TSA is quite large, reflecting the growth of the agency in response to the September 11th attacks. The TSA shrunk in size relative to the VHA under Obama. This reflects the growth of the Veterans Affairs Administration under the Obama administration.
     \par
-    To look closer at the relationships between items in these itemsets, I will pull out itemsets that do not reference a particular administration to examine features that are common across the entire federal government. Table \ref{tab:5} shows these itemsets and their support. These itemsets reflect my findings in Project 2 \cite{proj2}. Notable relationships are that a higher level of education is assocaited with a higher annual pay whan all other attributes are the same. Likewise, working for the government for longer is associated with a higher net pay. Also, The Category that applies to an employee's role is assocaited with different pay levels. In the examples given, Administrative roles are paied more than Technical roles. These trends hold for both administrations. The main difference is that employees in Techinical roles with a High School education have slightly higher pay under Obama than under Bush.
+    To look closer at the relationships between items in these itemsets, I will pull out itemsets that do not reference a particular administration to examine features that are common across the entire federal government. Table \ref{tab:5} shows these itemsets and their support. These itemsets reflect my findings in Project 2 \cite{proj2}. Notable relationships are that a higher level of education is associated with a higher annual pay whan all other attributes are the same. Likewise, working for the government for longer is associated with a higher net pay. Also, The Category that applies to an employee's role is associated with different pay levels. In the examples given, Administrative roles are paied more than Technical roles. These trends hold for both administrations. The main difference is that employees in Techinical roles with a High School education have slightly higher pay under Obama than under Bush.
 
     \begin{center}
         \begin{figure}
@@ -389,109 +389,111 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \begin{center}
         \begin{table}
             \centering
-            \begin{tabular}{ |c|c|c| }
+            \begin{tabular}{ |c|c| }
                 \hline
-                \multicolumn{3}{|c|}{2005} \\
-                \hline
-                Antecedents & Consequent & Confidence \\
+                2005 SupervisoryStatus=2 & Confidence \\
                 \hline
                 \{Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9761 \\
+                Pay=$>$110k\} & 0.9761 \\
                 \{Category=B,
                 Pay=50-70k,
-                region=florida\} & \{SupervisoryStatus=2\} & 0.8890 \\
+                region=florida\} & 0.8890 \\
                 \{Age=[47,57),
                 LOS=[12,22),
                 Category=O,
-                Pay=70-90k\} & \{SupervisoryStatus=2\} & 0.8333 \\
+                Pay=70-90k\} & 0.8333 \\
                 \{Age=[47,57),
                 Education=Col,
                 LOS=[12,22),
                 Category=O,
-                Pay=70-90k\} & \{SupervisoryStatus=2\} & 0.8287 \\
+                Pay=70-90k\} & 0.8287 \\
                 \{Age=[47,57),
                 Education=Col,
                 Category=O,
-                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8231 \\
+                Pay=90k-110k\} & 0.8231 \\
                 \{Education=Col,
                 Category=O,
-                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8079 \\
+                Pay=90k-110k\} & 0.8079 \\
+                \hline
+                2005 SupervisoryStatus=8 & Confidence \\
+                \hline
                 \{Age=[47,57),
                 Category=A,
-                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                Pay=$<$30k\} & 1 \\
                 \{Education=HS,
                 Category=T,
                 Pay=$<$30k,
-                region=florida\} & \{SupervisoryStatus=8\} & 1 \\
+                region=florida\} & 1 \\
                 \{Education=HS,
                 LOS=[1,12),
                 Category=T,
                 Pay=$<$30k,
-                region=florida\} & \{SupervisoryStatus=8\} & 1 \\
+                region=florida\} & 1 \\
                 \{Age=[47,57),
                 LOS=[1,12),
                 Category=A,
-                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                Pay=$<$30k\} & 1 \\
                 \{Category=T,
                 Pay=$<$30k,
-                region=georgia\} & \{SupervisoryStatus=8\} & 1 \\
+                region=georgia\} & 1 \\
                 \{LOS=[1,12),
                 Category=T,
                 Pay=$<$30k,
-                region=georgia\} & \{SupervisoryStatus=8\} & 1 \\
+                region=georgia\} & 1 \\
                 \hline
-                \multicolumn{3}{|c|}{2013} \\
-                \hline
-                Itemset & Support \\
+                2013 SupervisoryStatus=2 & Confidence \\
                 \hline
                 \{Age=[47,57),
                 Education=Col,
                 LOS=[22,35],
                 Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9289 \\
+                Pay=$>$110k\} & 0.9289 \\
                 \{Education=Col,
                 LOS=[22,35],
                 Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9220 \\
+                Pay=$>$110k\} & 0.9220 \\
                 \{Age=[47,57),
                 LOS=[22,35],
                 Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.9168 \\
+                Pay=$>$110k\} & 0.9168 \\
                 \{LOS=[22,35],
                 Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.8949 \\
+                Pay=$>$110k\} & 0.8949 \\
                 \{Age=[17,47),
                 Education=HS,
                 LOS=[12,22),
                 Category=O,
-                Pay=90k-110k\} & \{SupervisoryStatus=2\} & 0.8828 \\
+                Pay=90k-110k\} & 0.8828 \\
                 \{Age=[47,57),
                 Education=Col,
                 Category=O,
-                Pay=$>$110k\} & \{SupervisoryStatus=2\} & 0.8821 \\
+                Pay=$>$110k\} & 0.8821 \\
+                \hline
+                2013 SupervisoryStatus=8 & Confidence \\
+                \hline
                 \{Age=[57,75],
                 Category=T,
-                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                Pay=$<$30k\} & 1 \\
                 \{Education=Doc,
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
+                region=maryland\} & 1 \\
                 \{Education=Doc,
                 LOS=[1,12),
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
+                region=maryland\} & 1 \\
                 \{Education=Doc,
                 Category=P,
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=8\} & 1 \\
+                region=maryland\} & 1 \\
                 \{Age=[57,75],
                 LOS=[1,12),
                 Category=T,
-                Pay=$<$30k\} & \{SupervisoryStatus=8\} & 1 \\
+                Pay=$<$30k\} & 1 \\
                 \{Education=Doc,
                 LOS=[1,12),
                 Category=P,
                 Pay=50-70k,
-                region=maryland\} & \{SupervisoryStatus=2\} & 1 \\
+                region=maryland\} & 1 \\
                 \hline
             \end{tabular}
             \caption{Top SupervisoryStatus Rules for 2005 and 2013}
@@ -536,6 +538,9 @@ In order to mine the transaction data for meaningful rules, I will examine frequ
     \end{center}
 
 \section{Evaluation}
+In this report, we saw that the generated itemsets and rules upheld my findings from Project 1 and 2. Generally, older employees and employees who have worked at an agency for longer receive higher pay. These employees are also more likely to be supervisors.
+\par
+These findings are something people would generally expect, since this is how most organizations tend to structure themselves. What is more interesting is trying to position yourself at an agency where employees similar to you have a higher change of getting a promotion. In this report, I explored one attribute that is shared between supervisors and non-supervisors, the young age range. The list of agencies presented is useful in determining an agency to transition to. However, it would be more useful to build a model capable of generating this list for any attribute provided so that employees can dynamically feed attributes in and receive a list of agencies they could apply to. Building this model would take more time than I have allocated for this report, but this would be much more useful because a larger number of employees could use this model for career planning.
 
 \begin{thebibliography}{10}
     \bibitem{proj1}
