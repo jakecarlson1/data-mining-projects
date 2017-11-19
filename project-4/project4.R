@@ -37,6 +37,12 @@ prep_attributes <- function(df, agency_subset = c()) {
         else floor((as.integer(strsplit(as.character(x), '-')[[1]][1]) +
                         as.integer(strsplit(as.character(x), '-')[[1]][2]))/2))
 
+    # make supervisory status binary
+    df$SupervisoryStatus <- sapply(df$SupervisoryStatus, FUN = function(x)
+        if (is.na(x)) NA
+        else if (x == 8) 0
+        else 1)
+
     return(df)
 }
 
@@ -88,9 +94,21 @@ dfc_2013 <- df_2013[,cols]
 dfc_2005 <- scale(dfc_2005[complete.cases(dfc_2005),])
 dfc_2013 <- scale(dfc_2013[complete.cases(dfc_2013),])
 
+
+# k means
 set.seed(1000)
 
 k <- 3
 km_2005 <- kmeans(dfc_2005, centers = k)
 
+def.par <- par(no.readonly = TRUE)
+layout(t(1:k))
+for(i in 1:k) barplot(km_2005$centers[i,], ylim=c(-1,3), main=paste("Cluster", i), las=2)
+
+
+# hierarchical clustering
+d <- dist(dfc_2005)
+hc <- hclust(d, method="complete")
+plot(hc)
+rect.hclust(hc, k = k)
 
