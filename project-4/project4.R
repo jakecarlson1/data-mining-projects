@@ -26,8 +26,15 @@ prep_attributes <- function(df, agency_subset = c()) {
         else if(x == "75+") 75
         else (as.integer(substring(x, 1,2)) + as.integer(substring(x, 4,5)))/2)
 
-    # make Education an integer to improve training speed
+    # convert education encoding to the number of years needed to achieve a
+    # certain degree
     df$Education <- as.numeric(as.character(df$Education))
+    # edu_map <- list(1 = 4, 2 = 8, 3 = 10, 4 = 12, 5 = 13, 6 = 14, 7 = 12,
+    #                 8 = 13, 9 = 14, 10 = 14, 11 = 15, 12 = 16, 13 = 16,
+    #                 14 = 17, 15 = 20, 16 = 21, 17 = 18, 18 = 19, 19 = 18,
+    #                 20 = 19, 21 = 20, 22 = 22)
+    edu_map <- c(4,8,10,12,13,14,12,13,14,14,15,16,16,17,20,21,18,19,18,19,20,22)
+    df$Education <- sapply(df$Education, FUN = function(x) edu_map[x])
 
     # make LOS a number (middle of range) to improve training speed
     df$LOS <- sapply(df$LOS, FUN = function(x)
