@@ -75,7 +75,6 @@ subset_agencies <- function(df, agency_subset = c()) {
 
 prep_df <- function(df) {
     df$X <- NULL
-    df$Agency <- NULL # same as AgencyName
     df$Occupation <- NULL
 
     return(df)
@@ -103,12 +102,17 @@ km_2005 <- kmeans(dfc_2005, centers = k)
 
 def.par <- par(no.readonly = TRUE)
 layout(t(1:k))
-for(i in 1:k) barplot(km_2005$centers[i,], ylim=c(-1,3), main=paste("Cluster", i), las=2)
+for(i in 1:k) barplot(km_2005$centers[i,], ylim = c(-1,3),
+                      main = paste("Cluster", i), las = 2)
 
 
-# hierarchical clustering
-d <- dist(dfc_2005)
-hc <- hclust(d, method="complete")
-plot(hc)
+# hierarchical clustering gen services
+dfc_gs_2005 <- subset_agencies(df_2005, agency_subset = c("GS"))
+dfc_gs_2005 <- dfc_gs_2005[,cols]
+dfc_gs_2005 <- scale(dfc_gs_2005[complete.cases(dfc_gs_2005),])
+
+d <- dist(dfc_gs_2005)
+hc <- hclust(d, method = "complete")
+plot(as.dendrogram(hc), leaflab = "none")
 rect.hclust(hc, k = k)
 
