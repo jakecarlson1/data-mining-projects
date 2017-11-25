@@ -93,7 +93,7 @@ df_2005 <- prep_df(df_2005)
 df_2013 <- prep_df(df_2013)
 
 # subset to complete cases for selected columns
-cols <- c("Station","Age","Education","LOS","Pay","SupervisoryStatus")
+cols <- c("Age","Education","LOS","Pay","SupervisoryStatus")
 dfc_2005 <- df_2005[,cols]
 dfc_2013 <- df_2013[,cols]
 

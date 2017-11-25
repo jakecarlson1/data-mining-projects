@@ -24,7 +24,28 @@ This report will focus on clustering analysis of the federal payroll data obtain
 Armed with an undestanding of what groups exist within each agency, agency leaders can work to create employee teams that are balanced with respect to the features each group holds. We can also see what features create the largest separation between the subgroups.
 
 \section{Data Preparation}
-I will prepare my data in a similar fashion to Project 3 \cite{proj3}. I will take the middle of the age range for the age value of each employee. I will do the same thing for length of service. Education will be converted to an integer representing the number of years needed to achieve the degree the employee holds so that all education values are ratio scaled. I will also make supervisory status binary where a one indicates an employee is a supervisor and a zero indicates an employee is not a supervisor.
+I will prepare my data in a similar fashion to Project 3 \cite{proj3}. I will take the middle of the age range for the age value of each employee. I will do the same thing for length of service. Education will be converted to an integer representing the number of years needed to achieve the degree the employee holds so that all education values are ratio scaled. I will also make supervisory status binary where a one indicates an employee is a supervisor and a zero indicates an employee is not a supervisor. The final list of attributes to be used for clustering is given in Table \ref{tab:1}.
+\par
+All of these attributes are then scaled so that the values are between -1 and 1. With all of these attributes scaled, I can use Euclidean distance as my distance metric for clustering because all of the attributes are on the same scale.
+
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c|c| }
+                \hline
+                Attribute & Scale & Values \\
+                \hline
+                Age & Interval & 17, 22, 27, 32, 37, 42, 47, 52, 57, 62, 67, 72, 75 \\
+                Education & Ratio & 1 - 22 \\
+                LOS & Interval & 1, 3, 7, 12, 17, 22, 27, 32, 35 \\
+                Pay & Ratio & 1 - 401,000 \\
+                SupervisoryStatus & Nominal & 0, 1 \\
+                \hline
+            \end{tabular}
+            \caption{Final Data Set Attributes}
+            \label{tab:1}
+        \end{table}
+    \end{center}
 
 \section{Modeling}
 
