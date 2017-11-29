@@ -100,18 +100,47 @@ dfc_2013 <- df_2013[,cols]
 dfc_2005 <- scale(dfc_2005[complete.cases(dfc_2005),])
 dfc_2013 <- scale(dfc_2013[complete.cases(dfc_2013),])
 
-
 # k means
 set.seed(1000)
 
 k <- 3
 km_2005 <- kmeans(dfc_2005, centers = k)
+km_2013 <- kmeans(dfc_2013, centers = k)
 
 def.par <- par(no.readonly = TRUE)
+
+par(mar = c(8,3,2,2))
 layout(t(1:k))
 for(i in 1:k) barplot(km_2005$centers[i,], ylim = c(-1,3),
                       main = paste("Cluster", i), las = 2)
+for(i in 1:k) barplot(km_2013$centers[i,], ylim = c(-1,2),
+                      main = paste("Cluster", i), las = 2)
 
+k <- 5
+km_2013 <- kmeans(dfc_2013, centers = k)
+layout(t(1:k))
+for(i in 1:k) barplot(km_2013$centers[i,], ylim = c(-2,3),
+                      main = paste("Cluster", i), las = 2)
+
+ks <- 2:16
+WSS <- sapply(ks, FUN=function(k) {
+    kmeans(dfc_2013, centers=k, nstart=2)$tot.withinss
+})
+par(def.par)
+plot(ks, WSS, type="l", main="Within Sum of Squares 2013")
+abline(v=8, col="red", lty=2)
+
+# reset par
+resetPar <- function() {
+    dev.new()
+    op <- par(no.readonly = TRUE)
+    dev.off()
+    op
+}
+par(resetPar())
+
+library(cluster)
+clusplot(dfc_2005, km_2005$cluster)
 
 # hierarchical clustering gen services
 dfc_gs_2005 <- subset_agencies(df_2005, agency_subset = c("GS"))
