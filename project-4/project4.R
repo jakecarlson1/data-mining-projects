@@ -158,49 +158,37 @@ dfc_2013 <- df_2013[,cols]
 dfc_2005 <- dfc_2005[complete.cases(dfc_2005),]
 dfc_2013 <- dfc_2013[complete.cases(dfc_2013),]
 
-agency_size_2005 <- as.data.frame(table(dfc_2005$Agency))
-colnames(agency_size_2005) <- c("Agency", "size")
+# group by agencies, uses clustering of km (k = 3)
+group_agencies <- function(df, km) {
+    df$Agency <- sapply(df$Agency, FUN = function(x) substring(x, 1,2))
 
-df_agency_2005_1 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                             data = dfc_2005[km_2005$cluster == 1,],
-                             FUN = mean),
-                             c("Agency", paste("k.1.", cols[2:4], sep = "")))
-df_agency_2005_2 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                                       data = dfc_2005[km_2005$cluster == 2,],
-                                       FUN = mean),
-                             c("Agency", paste("k.2.", cols[2:4], sep = "")))
-df_agency_2005_3 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                                       data = dfc_2005[km_2005$cluster == 3,],
-                                       FUN = mean),
-                             c("Agency", paste("k.3.", cols[2:4], sep = "")))
-df_agency_2005 <- merge(merge(merge(df_agency_2005_1, df_agency_2005_2),
-                              df_agency_2005_3), agency_size_2005)
+    sizes <- as.data.frame(table(df$Agency))
+    colnames(sizes) <- c("Agency", "size")
 
-agency_size_2013 <- as.data.frame(table(dfc_2013$Agency))
-colnames(agency_size_2013) <- c("Agency", "size")
+    df_1 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                               data = df[km$cluster == 1,],
+                               FUN = mean),
+                     c("Agency", paste("k.1.", cols[2:4], sep = "")))
+    df_2 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                               data = df[km$cluster == 2,],
+                               FUN = mean),
+                     c("Agency", paste("k.2.", cols[2:4], sep = "")))
+    df_3 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                               data = df[km$cluster == 3,],
+                               FUN = mean),
+                     c("Agency", paste("k.3.", cols[2:4], sep = "")))
 
-df_agency_2013_1 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                                       data = dfc_2013[km_2013$cluster == 1,],
-                                       FUN = mean),
-                             c("Agency", paste("k.1.", cols[2:4], sep = "")))
-df_agency_2013_2 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                                       data = dfc_2013[km_2013$cluster == 2,],
-                                       FUN = mean),
-                             c("Agency", paste("k.2.", cols[2:4], sep = "")))
-df_agency_2013_3 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
-                                       data = dfc_2013[km_2013$cluster == 3,],
-                                       FUN = mean),
-                             c("Agency", paste("k.3.", cols[2:4], sep = "")))
-df_agency_2013 <- merge(merge(merge(df_agency_2013_1, df_agency_2013_2),
-                              df_agency_2013_3), agency_size_2013)
+    df <- merge(merge(merge(df_1, df_2), df_3), sizes)
 
-rm(df_agency_2005_1,df_agency_2005_2,df_agency_2005_3,df_agency_2013_1,df_agency_2013_2,df_agency_2013_3)
+    rownames(df) <- df$Agency
+    df <- df[,-1]
 
-rownames(df_agency_2005) <- df_agency_2005$Agency
-df_agency_2005 <- df_agency_2005[,-1]
+    return(df)
+}
 
-rownames(df_agency_2013) <- df_agency_2013$Agency
-df_agency_2013 <- df_agency_2013[,-1]
+
+df_agency_2005 <- group_agencies(dfc_2005, km_2005)
+df_agency_2013 <- group_agencies(dfc_2013, km_2013)
 
 d_2005 <- dist(scale(df_agency_2005))
 cl_2005 <- hclust(d_2005)
@@ -209,6 +197,24 @@ plot(cl_2005)
 d_2013 <- dist(scale(df_agency_2013))
 cl_2013 <- hclust(d_2013)
 plot(cl_2013)
+
+# without size
+d_2005 <- dist(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
+cl_2005 <- hclust(d_2005)
+plot(cl_2005)
+rect.hclust(cl_2005, k=8)
+
+clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=3)
+
+d_2013 <- dist(scale(df_agency_2013[,colnames(df_agency_2013) != "size"]))
+cl_2013 <- hclust(d_2013)
+plot(cl_2013)
+
+pc_2005 <- prcomp(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
+biplot(pc_2005, col = c("grey", "red"))
+
+library(seriation)
+dissplot(d_2005, labels=kmeans(scale(df_agency_2005), centers=4)$cluster)
 
 
 
