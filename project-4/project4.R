@@ -130,6 +130,12 @@ par(def.par)
 plot(ks, WSS, type="l", main="Within Sum of Squares 2013")
 abline(v=8, col="red", lty=2)
 
+k <- 8
+km_2013 <- kmeans(dfc_2013, centers = k)
+layout(t(1:k))
+for(i in 1:k) barplot(km_2013$centers[i,], ylim = c(-2,3),
+                      main = paste("Cluster", i), las = 2)
+
 # reset par
 resetPar <- function() {
     dev.new()
@@ -141,6 +147,70 @@ par(resetPar())
 
 library(cluster)
 clusplot(dfc_2005, km_2005$cluster)
+
+
+# hierarchical clustering
+# subset to complete cases for selected columns
+cols <- c("Agency","Age","Education","Pay")
+dfc_2005 <- df_2005[,cols]
+dfc_2013 <- df_2013[,cols]
+
+dfc_2005 <- dfc_2005[complete.cases(dfc_2005),]
+dfc_2013 <- dfc_2013[complete.cases(dfc_2013),]
+
+agency_size_2005 <- as.data.frame(table(dfc_2005$Agency))
+colnames(agency_size_2005) <- c("Agency", "size")
+
+df_agency_2005_1 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                             data = dfc_2005[km_2005$cluster == 1,],
+                             FUN = mean),
+                             c("Agency", paste("k.1.", cols[2:4], sep = "")))
+df_agency_2005_2 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                                       data = dfc_2005[km_2005$cluster == 2,],
+                                       FUN = mean),
+                             c("Agency", paste("k.2.", cols[2:4], sep = "")))
+df_agency_2005_3 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                                       data = dfc_2005[km_2005$cluster == 3,],
+                                       FUN = mean),
+                             c("Agency", paste("k.3.", cols[2:4], sep = "")))
+df_agency_2005 <- merge(merge(merge(df_agency_2005_1, df_agency_2005_2),
+                              df_agency_2005_3), agency_size_2005)
+
+agency_size_2013 <- as.data.frame(table(dfc_2013$Agency))
+colnames(agency_size_2013) <- c("Agency", "size")
+
+df_agency_2013_1 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                                       data = dfc_2013[km_2013$cluster == 1,],
+                                       FUN = mean),
+                             c("Agency", paste("k.1.", cols[2:4], sep = "")))
+df_agency_2013_2 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                                       data = dfc_2013[km_2013$cluster == 2,],
+                                       FUN = mean),
+                             c("Agency", paste("k.2.", cols[2:4], sep = "")))
+df_agency_2013_3 <- setNames(aggregate(cbind(Age, Education, Pay) ~ Agency,
+                                       data = dfc_2013[km_2013$cluster == 3,],
+                                       FUN = mean),
+                             c("Agency", paste("k.3.", cols[2:4], sep = "")))
+df_agency_2013 <- merge(merge(merge(df_agency_2013_1, df_agency_2013_2),
+                              df_agency_2013_3), agency_size_2013)
+
+rm(df_agency_2005_1,df_agency_2005_2,df_agency_2005_3,df_agency_2013_1,df_agency_2013_2,df_agency_2013_3)
+
+rownames(df_agency_2005) <- df_agency_2005$Agency
+df_agency_2005 <- df_agency_2005[,-1]
+
+rownames(df_agency_2013) <- df_agency_2013$Agency
+df_agency_2013 <- df_agency_2013[,-1]
+
+d_2005 <- dist(scale(df_agency_2005))
+cl_2005 <- hclust(d_2005)
+plot(cl_2005)
+
+d_2013 <- dist(scale(df_agency_2013))
+cl_2013 <- hclust(d_2013)
+plot(cl_2013)
+
+
 
 # hierarchical clustering gen services
 dfc_gs_2005 <- subset_agencies(df_2005, agency_subset = c("GS"))

@@ -59,7 +59,9 @@ I will use two clustering methods to compare the structure of the government und
     \par
     The cluster centroids for 2013 with $k = 5$ are given in Figure \ref{fig:3}. We see that the oldest employees have been split by two clusters. In Cluster 4, employees habe a slightly higher education on average and have worked for the government for much longer than employees in Cluster 5. In this clustering, Cluster 3 contains the youngest employees, and Cluster 1 contains employees in the middle of the age range who have the highest levels of education.
     \par
-    It still feels like there are more groups hidden in these clusters. To examine how many groups is appropriate for k-means, I will run the algorithm for a varying number of of groups and look at the within sum of squares. By plotting these values and looking for the sharpest turn, we can determine the optimum value for the number of groups to use to cluster this data set using k-means. This plot is given in Figure \ref{fig:4}. The sharpest turn is where $k = 8$, however, the slope increases fairly consistently over the number of clusters, indicating the data can be grouped using any number of clusters and the cluster centroids would still describe relevant features about employees.
+    It still feels like there are more groups hidden in these clusters. To examine how many groups is appropriate for k-means, I will run the algorithm for a varying number of of groups and look at the within sum of squares. By plotting these values and looking for the sharpest turn, we can determine the optimum value for the number of groups to use to cluster this data set using k-means. This plot is given in Figure \ref{fig:4}. The sharpest turn is where $k = 8$, however, the slope increases fairly consistently over the number of clusters, indicating there is not a single number of clusters that emerges as best for this data set. This is likely due to a lack of structure in the data, and must be explored further.
+    \par
+    The within cluster sum of squares for $k = 3, 5, 8$ is given in Table \ref{tab:2}. This shows that as the number of clusters increases, the variation within a cluster decreases. This makes sense, as increasing the number of centroids will make it easier for points to sit closer to an existing centroid. However, it is easier to understand the data if there are fewer clusters. That is why I would recommend using three clusters for k-means, as this produces clusters with easy to understand and identifyable employee attributes.
 
     \begin{center}
         \begin{figure}
@@ -93,7 +95,25 @@ I will use two clustering methods to compare the structure of the government und
         \end{figure}
     \end{center}
 
+    \begin{center}
+        \begin{table}
+            \centering
+            \begin{tabular}{ |c|c| }
+                \hline
+                k & Within Sum of Squares \\
+                \hline
+                3 & 42.6\% \\
+                5 & 59.3\% \\
+                8 & 69.3\% \\
+                \hline
+            \end{tabular}
+            \caption{Within Cluster Sum of Squares for 2013}
+            \label{tab:2}
+        \end{table}
+    \end{center}
+
     \subsection{Hierarchical}
+    In hierarchical clustering, the data is divided into clusters which can be joined together with their nearest neighbors to form larger clusters. This joining can be used to form a hierarchy of clusters. For this process, I want to cluster agencies, so I will perform some additional processing to prepare agency data. I will take the mean Age, Education, and Pay for each of the three group identified using k-means.
 
 \section{Evaluation}
 
