@@ -19,7 +19,7 @@ Clustering
 \newpage
 
 \section{Business Understanding}
-This report will focus on clustering analysis of the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. Specifically, k-means and hierarchical clustering will be used to find groups of emplyees with similar attributes in the federal government.
+This report will focus on clustering analysis of the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. Specifically, k-means find groups of emplyees with similar attributes in the federal government and hierarchical clustering will be used to find agencies which have similar functions in the federal government.
 \par
 Armed with an undestanding of what groups exist within each agency, agency leaders can work to create employee teams that are balanced with respect to the features each group holds. We can also see what features create the largest separation between the subgroups.
 
@@ -113,7 +113,50 @@ I will use two clustering methods to compare the structure of the government und
     \end{center}
 
     \subsection{Hierarchical}
-    In hierarchical clustering, the data is divided into clusters which can be joined together with their nearest neighbors to form larger clusters. This joining can be used to form a hierarchy of clusters. For this process, I want to cluster agencies, so I will perform some additional processing to prepare agency data. I will take the mean Age, Education, and Pay for each of the three group identified using k-means.
+    In hierarchical clustering, the data is divided into clusters which can be joined together with their nearest neighbors to form larger clusters. This joining can be used to form a hierarchy of clusters. For this process, I want to cluster agencies, so I will perform some additional processing to prepare agency data. I will take the mean Age, Education, and Pay for each of the three group identified using k-means. The goal here is to find clusters of agencies which carry out similar functions in the federal govenrment.
+    \par
+    Looking at the dentrogram for 2005, given in Figure \ref{fig:4}, it would appear that there are 8 groups that form. Unfortunately, these groups have little to do with the purpose of each agency. For example,
+    \par
+    The problem here is that the selected attributes for each agency represent features of employees, and have little to do with the structure or functionality of the agency. It would be necessary to incorporate additional data about each agency that describes features such as funding, organization, the number of appointed positions, and some description of what each agency does for the nation. A more robust clustering could potentially be optained by examining the agency names and clustering by common words, but this clustering would be crude.
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/2005-dentrogram.pdf}
+            \caption{Agency Dentrogram for 2005 with 8 Groups Highlighted}
+            \label{fig:4}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/2005-cluster-plot.pdf}
+            \caption{2005 Agency Clusters Projected onto Two Principal Components}
+            \label{fig:5}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \begin{enumerate}
+                \item Group 1: AMERICAN BATTLE MONUMENTS COMMISSION, FED MEDIATION AND CONCILIATION SERVICE, INTERNAT BOUNDARY \& WATER CMSN: US \& MEX, GOVERNMENT PRINTING OFFICE, PEACE CORPS, OFC OF NAVAJO AND HOPI INDIAN RELOCATION, ARMED FORCES RETIREMENT HOME, SELECTIVE SERVICE SYSTEM, JAPAN-UNITED STATES FRIENDSHIP CMSN, ANTITRUST MODERNIZATION COMMISSION
+                \item Group 4: AFRICAN DEVELOPMENT FOUNDATION, ARCTIC RESEARCH COMMISSION, JAMES MADISON MEMORIAL FELLOWSHIP FOUND, NUCLEAR WASTE TECHNICAL REVIEW BOARD, NAT CMSN ON LIBRARIES AND INFO SCIENCE, FARM CREDIT SYSTEM INSURANCE CORPORATION, VIETNAM EDUCATION FOUNDATION, INTERNATIONAL JOINT CMSN: U.S. \& CANADA, MARINE MAMMAL COMMISSION, NATIONAL COUNCIL ON DISABILITY, OCCUPATIONAL SAFETY \& HEALTH REVIEW CMSN, FED MINE SAFETY AND HEALTH REVIEW CMSN, MEDICARE PAYMENT ADVISORY COMMISSION
+                \item Group 5: FEDERAL LABOR RELATIONS AUTHORITY, MERIT SYSTEMS PROTECTION BOARD, DEFENSE NUCLEAR FACILITIES SAFETY BOARD, OFFICE OF MANAGEMENT AND BUDGET, COUNCIL OF ECONOMIC ADVISERS, COMMODITY FUTURES TRADING COMMISSION, COUNCIL ON ENVIR QUAL/OFC OF ENVIR QUAL, FEDERAL TRADE COMMISSION, FEDERAL HOUSING FINANCE BOARD, HARRY S. TRUMAN SCHOLARSHIP FOUNDATION, MILLENNIUM CHALLENGE CORPORATION, NATIONAL SCIENCE FOUNDATION, SECURITIES AND EXCHANGE COMMISSION, OFFICE OF THE U.S. TRADE REPRESENTATIVE, OFFICE OF SCIENCE AND TECHNOLOGY POLICY
+                \item Group 6: CHRISTOPHER COLUMBUS FELLOWSHIP FOUNDATN, BARRY GOLDWATER SCHOL \& EXCEL IN ED FOUN, HELP ENHANCE LIVELIHOOD OF PEOPLE CMSN
+                \item Group 7: INTERNAT BOUNDARY CMSN: U.S. AND CANADA
+                \item Group 8: CMSN ON REV OF OVERSEAS MIL STRUCTURE
+            \end{enumerate}
+            \caption{Agencies in Each Hierarchical Cluster for 2005}
+            \label{tab:3}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
+            \includegraphics[scale=0.4]{./images/2013-dentrogram.pdf}
+            \caption{Agency Dentrogram for 2013 with 8 Groups Highlighted}
+            \label{fig:6}
+        \end{figure}
+    \end{center}
 
 \section{Evaluation}
 

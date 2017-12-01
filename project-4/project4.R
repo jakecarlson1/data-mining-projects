@@ -158,6 +158,13 @@ dfc_2013 <- df_2013[,cols]
 dfc_2005 <- dfc_2005[complete.cases(dfc_2005),]
 dfc_2013 <- dfc_2013[complete.cases(dfc_2013),]
 
+# read agency translation
+agency_file <- paste("../data/", "SCTFILE.TXT", sep = "")
+agency_trans <- readLines(agency_file)
+agency_ID <- sapply(agency_trans, FUN = function(x) substring(x, 3,4))
+agency_name <- trimws(sapply(agency_trans, FUN = function(x) substring(x, 36,75)))
+agency_trans_table <- data.frame(agency_ID = agency_ID, agency_name = agency_name)
+
 # group by agencies, uses clustering of km (k = 3)
 group_agencies <- function(df, km) {
     df$Agency <- sapply(df$Agency, FUN = function(x) substring(x, 1,2))
@@ -183,6 +190,10 @@ group_agencies <- function(df, km) {
     rownames(df) <- df$Agency
     df <- df[,-1]
 
+    # replace rowname with agency name
+    m <- match(rownames(df), agency_trans_table$agency_ID)
+    rownames(df) <-  agency_trans_table$agency_name[m]
+
     return(df)
 }
 
@@ -201,14 +212,20 @@ plot(cl_2013)
 # without size
 d_2005 <- dist(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
 cl_2005 <- hclust(d_2005)
-plot(cl_2005)
+plot(cl_2005, main = "2005 Agency Cluster Dentrogram")
 rect.hclust(cl_2005, k=8)
 
-clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=3)
+clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=3, main="2005 Cluster Plot")
 
 d_2013 <- dist(scale(df_agency_2013[,colnames(df_agency_2013) != "size"]))
 cl_2013 <- hclust(d_2013)
-plot(cl_2013)
+plot(cl_2013, main = "2013 Agency Cluster Dentrogram")
+rect.hclust(cl_2013, k=8)
+
+clusplot(df_agency_2013, cutree(cl_2013, k=8), labels=3, main="2013 Cluster Plot")
+
+
+
 
 pc_2005 <- prcomp(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
 biplot(pc_2005, col = c("grey", "red"))
