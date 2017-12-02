@@ -215,7 +215,7 @@ cl_2005 <- hclust(d_2005)
 plot(cl_2005, main = "2005 Agency Cluster Dentrogram")
 rect.hclust(cl_2005, k=8)
 
-clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=3, main="2005 Cluster Plot")
+clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=2, main="2005 Cluster Plot")
 
 d_2013 <- dist(scale(df_agency_2013[,colnames(df_agency_2013) != "size"]))
 cl_2013 <- hclust(d_2013)
