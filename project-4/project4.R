@@ -191,8 +191,8 @@ group_agencies <- function(df, km) {
     df <- df[,-1]
 
     # replace rowname with agency name
-    m <- match(rownames(df), agency_trans_table$agency_ID)
-    rownames(df) <-  agency_trans_table$agency_name[m]
+    # m <- match(rownames(df), agency_trans_table$agency_ID)
+    # rownames(df) <-  agency_trans_table$agency_name[m]
 
     return(df)
 }
@@ -228,7 +228,7 @@ clusplot(df_agency_2013, cutree(cl_2013, k=8), labels=3, main="2013 Cluster Plot
 
 
 pc_2005 <- prcomp(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
-biplot(pc_2005, col = c("grey", "red"))
+biplot(pc_2005, col = c("grey", "red"), main = "2005 Hierarchical Clustering PCA")
 
 library(seriation)
 dissplot(d_2005, labels=kmeans(scale(df_agency_2005), centers=4)$cluster)

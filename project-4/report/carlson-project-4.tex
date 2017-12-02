@@ -115,9 +115,11 @@ I will use two clustering methods to compare the structure of the government und
     \subsection{Hierarchical}
     In hierarchical clustering, the data is divided into clusters which can be joined together with their nearest neighbors to form larger clusters. This joining can be used to form a hierarchy of clusters. For this process, I want to cluster agencies, so I will perform some additional processing to prepare agency data. I will take the mean Age, Education, and Pay for each of the three group identified using k-means. The goal here is to find clusters of agencies which carry out similar functions in the federal govenrment.
     \par
-    Looking at the dentrogram for 2005, given in Figure \ref{fig:4}, it would appear that there are 8 groups that form. Unfortunately, these groups have little to do with the purpose of each agency. For example,
+    Looking at the dentrogram for 2005, given in Figure \ref{fig:4}, it would appear that there are 8 groups that form. Some of the groups contains agencies that are related. For example, Group 5 has the Office of Management and Budget, the Council of Economic Advisors, the Commodity Futures Trading Commission, the Federal Trade Commission, the Securities and Exchange Commission, and the Office of the U.S. Trade Representative. These agencies all have to do with financial regulation and policy, but this group also contains the National Science Foundation and the Office of Science and Technology Policy. These two agencies are also realted to each other, but they have little to do with the financial regulators. This grouping worked out fairly well. Unfortunately, the remaining groups have little to do with the purpose of each agency. For example, Group 4 has the Arctic Research Comission, the Nuclear Waste Techinical Review Board, the Marine Mammal Commission, the national Council on disability, the Federal Mine Safety and Health Review Commission, and the Medicare Payment Advisory Commission. These agencies are loosly related at best.
     \par
-    The problem here is that the selected attributes for each agency represent features of employees, and have little to do with the structure or functionality of the agency. It would be necessary to incorporate additional data about each agency that describes features such as funding, organization, the number of appointed positions, and some description of what each agency does for the nation. A more robust clustering could potentially be optained by examining the agency names and clustering by common words, but this clustering would be crude.
+    Looking for agencies AN, AW, BK, BW, CX, FK, GO, GY, MA, NK, OS, RS, ZL in the first quarter of Figure \ref{fig:6} shows why this group is separated. These agencies have employees with slightly higher education levels, more pay, and that are older. This graph reveals the main issue with clustering agencies this way. The problem here is that the selected attributes for each agency represent features of employees, and have little to do with the structure or functionality of the agency.
+    \par
+    It would be necessary to incorporate additional data about each agency that describes features such as funding, organization, the number of appointed positions, and some description of what each agency does for the nation. A more robust clustering could potentially be optained by examining the agency names and clustering by common words, but this clustering would be crude.
 
     \begin{center}
         \begin{figure}
@@ -137,6 +139,14 @@ I will use two clustering methods to compare the structure of the government und
 
     \begin{center}
         \begin{figure}
+            \includegraphics[scale=0.4]{./images/2005-pca.pdf}
+            \caption{2005 Agency Clusters Projected onto Two Principal Components}
+            \label{fig:6}
+        \end{figure}
+    \end{center}
+
+    \begin{center}
+        \begin{figure}
             \begin{enumerate}
                 \item Group 1: AMERICAN BATTLE MONUMENTS COMMISSION, FED MEDIATION AND CONCILIATION SERVICE, INTERNAT BOUNDARY \& WATER CMSN: US \& MEX, GOVERNMENT PRINTING OFFICE, PEACE CORPS, OFC OF NAVAJO AND HOPI INDIAN RELOCATION, ARMED FORCES RETIREMENT HOME, SELECTIVE SERVICE SYSTEM, JAPAN-UNITED STATES FRIENDSHIP CMSN, ANTITRUST MODERNIZATION COMMISSION
                 \item Group 4: AFRICAN DEVELOPMENT FOUNDATION, ARCTIC RESEARCH COMMISSION, JAMES MADISON MEMORIAL FELLOWSHIP FOUND, NUCLEAR WASTE TECHNICAL REVIEW BOARD, NAT CMSN ON LIBRARIES AND INFO SCIENCE, FARM CREDIT SYSTEM INSURANCE CORPORATION, VIETNAM EDUCATION FOUNDATION, INTERNATIONAL JOINT CMSN: U.S. \& CANADA, MARINE MAMMAL COMMISSION, NATIONAL COUNCIL ON DISABILITY, OCCUPATIONAL SAFETY \& HEALTH REVIEW CMSN, FED MINE SAFETY AND HEALTH REVIEW CMSN, MEDICARE PAYMENT ADVISORY COMMISSION
@@ -147,14 +157,6 @@ I will use two clustering methods to compare the structure of the government und
             \end{enumerate}
             \caption{Agencies in Each Hierarchical Cluster for 2005}
             \label{tab:3}
-        \end{figure}
-    \end{center}
-
-    \begin{center}
-        \begin{figure}
-            \includegraphics[scale=0.4]{./images/2013-dentrogram.pdf}
-            \caption{Agency Dentrogram for 2013 with 8 Groups Highlighted}
-            \label{fig:6}
         \end{figure}
     \end{center}
 
