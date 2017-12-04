@@ -213,7 +213,7 @@ plot(cl_2013)
 d_2005 <- dist(scale(df_agency_2005[,colnames(df_agency_2005) != "size"]))
 cl_2005 <- hclust(d_2005)
 plot(cl_2005, main = "2005 Agency Cluster Dentrogram")
-rect.hclust(cl_2005, k=8)
+rect.hclust(cl_2005, k=6)
 
 clusplot(df_agency_2005, cutree(cl_2005, k=8), labels=2, main="2005 Cluster Plot")
 
@@ -233,7 +233,11 @@ biplot(pc_2005, col = c("grey", "red"), main = "2005 Hierarchical Clustering PCA
 library(seriation)
 dissplot(d_2005, labels=kmeans(scale(df_agency_2005), centers=4)$cluster)
 
-
+ks <- 2:16
+ASW <- sapply(ks, FUN=function(k) {
+    fpc::cluster.stats(d_2005, cutree(cl_2005, k))$avg.silwidth
+})
+plot(ks, ASW, type="l", main="2005 Average Silhouette Width")
 
 # hierarchical clustering gen services
 dfc_gs_2005 <- subset_agencies(df_2005, agency_subset = c("GS"))
