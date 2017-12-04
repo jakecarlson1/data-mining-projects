@@ -11,7 +11,7 @@
 \maketitle
 
 \abstract
-Clustering
+Federal payroll data is used to perform clustering analysis. Both k-means and hierarchical clustering are used. First, k-means is used to cluster employees into groups of employees with similar qualities. We will see that supervisors tend to be middle-aged, and other groups form for employees older and younger than supervisors that are not in management positions. Second, hierarchical clustering is used to group agencies based on employee attributes. The goal was to find groupings that have similar functions, but additional data is needed for this to be a useful model.
 
 \newpage
 
@@ -22,6 +22,8 @@ Clustering
 This report will focus on clustering analysis of the federal payroll data obtained by BuzzFeed News through the Freedom of Information Act. Specifically, k-means find groups of emplyees with similar attributes in the federal government and hierarchical clustering will be used to find agencies which have similar functions in the federal government.
 \par
 Armed with an undestanding of what groups exist within each agency, agency leaders can work to create employee teams that are balanced with respect to the features each group holds. We can also see what features create the largest separation between the subgroups.
+\par
+With a model of what agencies influence and enforce similar parts of policy, a quick reference can be made to find agencies related to an agency of interest. It would also be useful to find what attributes make agencies appear to be related. If agency leaders know what other agencies are structured like theirs, they can reach out to these agencies when facing restructuring or other organizational changes.
 
 \section{Data Preparation}
 I will prepare my data in a similar fashion to Project 3 \cite{proj3}. I will take the middle of the age range for the age value of each employee. I will do the same thing for length of service. Education will be converted to an integer representing the number of years needed to achieve the degree the employee holds so that all education values are ratio scaled. I will also make supervisory status binary where a one indicates an employee is a supervisor and a zero indicates an employee is not a supervisor. The final list of attributes to be used for clustering is given in Table \ref{tab:1}. Previous projects have shown that Age, Education, Length of Service, Pay, and Supervisory Status are the most relevant employee attributes.
@@ -112,7 +114,7 @@ I will use two clustering methods to compare the structure of the government und
         \end{table}
     \end{center}
 
-    \subsection{Hierarchical}
+    \subsection{Hierarchical Clustering}
     In hierarchical clustering, a hierarchy of clusters can be formed by joining neighboring clusters in sequence. I will use complete link clustering, which assigns each data point its own group and joins the closest groups together. Here, closest is defined as the Euclidean distance between two points, or cluster centroids. For this process, I want to cluster agencies, so I will perform some additional processing to prepare agency data. I will take the mean Age, Education, and Pay for each of the three group identified using k-means. The goal here is to find clusters of agencies which carry out similar functions in the federal govenrment.
     \par
     Looking at the dentrogram for 2005, given in Figure \ref{fig:4}, it would appear that there are 8 groups that form. The agencies are projected onto two principal components in Figure \ref{fig:5} with the clusters drawn for visualization. Some of the groups contains agencies that are related. For example, Group 5 has the Office of Management and Budget, the Council of Economic Advisors, the Commodity Futures Trading Commission, the Federal Trade Commission, the Securities and Exchange Commission, and the Office of the U.S. Trade Representative. These agencies all have to do with financial regulation and policy, but this group also contains the National Science Foundation and the Office of Science and Technology Policy. These two agencies are also realted to each other, but they have little to do with the financial regulators. This grouping worked out fairly well. Unfortunately, the remaining groups have little to do with the purpose of each agency. For example, Group 4 has the Arctic Research Comission, the Nuclear Waste Techinical Review Board, the Marine Mammal Commission, the national Council on disability, the Federal Mine Safety and Health Review Commission, and the Medicare Payment Advisory Commission. These agencies are loosly related at best.
@@ -125,7 +127,7 @@ I will use two clustering methods to compare the structure of the government und
     \par
     This clustering also determined some agencies to be outliers. Groups 7 and 8 only contain one agency each, and they fall far away from the remaining agencies. The Commission on Review of Overseas Military Structure (YA, Group 8) has average pay and education, but much older employees than the rest of the agencies. The International Boundary Commission: U.S and Canada (GX, Group 7) has lower paid and younger employees than all of the remaining agencies by a substantial margin.
     \par
-    To try to see if there is a more suitable number of groups that could be used to cluster this data, I plotted the average silhouette width for clusters while varying the number of clusters from 2 to 16. This plot is given in Figure \ref{fig:7}. The peak at $k = 2$ indicates the non-separability of the data.
+    To try to see if there is a more suitable number of groups that could be used to cluster this data, I plotted the average silhouette width for clusters while varying the number of clusters from 2 to 16. This plot is given in Figure \ref{fig:7}. The peak at $k = 2$ indicates the non-separability of the data. This graph would also indicate that my selection of 8 groups was flawed, and I should have opted for using six or four groups instead. Though, this simply would have joined neighboring groups and would not have produced clusters that are more representative of the various functions of the federal government.
 
     \begin{center}
         \begin{figure}
@@ -176,6 +178,19 @@ I will use two clustering methods to compare the structure of the government und
 
 \section{Evaluation}
 
+    \subsection{K-Means}
+    Using k-means to cluster employees showed that this data was not particularly well suited for clustering. Each time the data was clustered, supervisory status was a major factor affecting the cluster centroids. For both three and five groups, a single centroid moved to include supervisors. The remaining centroids divided the non-supervisors by the remaining available traits.
+    \par
+    Both the 2005 and 2013 clusterings showed that supervisors tend to be in the middle of the age range on average. The Obama administration appeared to promote more loyal employees to supervisory positions more often, as seen by the higher average Length of Service for supervisors than under Bush.
+    \par
+    We saw that increasing the number of clusters helped decrease the distance from points to their centroids, but this is not particularly useful given the non-separibility of the data. For that reason, I recommend using fewer clusters to get a better idea of the types of employees on average. It is still useful to have this model to understand what traits are more common in supervisors than non-supervisors. This modeling could be applied to any particular agency and the groupsing would be mor indicative of the different types of employees. This model could help management target training programs for particular groups of employees, and potentially identify employees who look like they could fit into management.
+
+    \subsection{Hierarchical Clustering}
+    When clustering agencies based on employee attributes, hierarchical clustering did not form groups of agencies that had similar functions. A few of the clusters had agencies that are related, but the clustering was not robust. Some agencies that had more employees with higher education were grouped together, such as Group 5 in Figure \ref{tab:3} which had a lot of agencies that deal with financial and scientific regulation and policy.
+    \par
+    Additional data is needed about what each agency does in order for a robust model to be developed. With information about how each agency is structured and what effects they have on the nation, clusters could be formed that group agencies more on what they do.
+    \par
+    Until this additional data is generated or obtained, I would not recommend using this model as a way to interpret the structure of the federal government.
 
 \begin{thebibliography}{10}
     \bibitem{proj1}
