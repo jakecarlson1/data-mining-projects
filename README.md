@@ -11,4 +11,4 @@ Using decision trees, random forests, and artifical neural networks to predict t
 Using association rule mining to find frequent, closed, and maximal itemsets for federal employees. Data for the years 2005 and 2013 are compared to examine how common employee features change as Obama took power. I then look at features that are shared between supervisors and non-supervisors to see what agencies certain employees have a better chance of becoming leaders of.
 
 ## Project 4
-Clustering.
+Using clustering analysis to find groups of employees and agencies. First, k-means is used to compare employees in 2005 and 2013. Then, hierarchical clustering is used to find agencies that are structured in similar ways and have a similar composition of employees.
